@@ -1,5 +1,6 @@
 package com.example.kyle.patiencetraining;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Reward> mUnlockedRewards;
     private LockedAdapter mLockedAdapter;
     private UnlockedAdapter mUnlockedAdapter;
+    private static final int ADD_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +58,13 @@ public class MainActivity extends AppCompatActivity {
         testMixedList.add(new Reward("Buy a car", 10000f, cal.getTime(), cal.getTime(),
                 "http://","res/image",true));
 
-        seperateList(testMixedList);
+        separateList(testMixedList);
 
        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivityForResult(new Intent(MainActivity.this,ModifyRewardActivity.class), ADD_REQUEST);
             }
         });
     }
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void seperateList(List<Reward> rewardList){
+    public void separateList(List<Reward> rewardList){
         //Make sure list is ordered by date
         if(mLockedRewards == null)
             mLockedRewards = new ArrayList<>();

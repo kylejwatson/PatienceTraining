@@ -1,11 +1,29 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Patience Training</string>
     <string name="action_settings">Settings</string>
+    <!-- Start of time strings -->
     <string name="countdown">
-        For <xliff:g id="timeQuant" example="5.1">%.2f</xliff:g> <xliff:g id="timeQual" example="days">%s</xliff:g>
+        For <xliff:g example="5.1" id="timeQuant">%.2f</xliff:g> <xliff:g example="days" id="timeQual">%s</xliff:g>
     </string>
     <string name="day">Days</string>
     <string name="week">Weeks</string>
     <string name="month">Months</string>
     <string name="year">Years</string>
+    <!-- End of time strings -->
+
+    <!-- Start of modify activity strings -->
+    <string name="title_activity_modify_reward">ModifyRewardActivity</string>
+    <string name="name_label">Name:</string>
+    <string name="name_placeholder">Name of item/reward</string>
+    <string name="price_label">Price:</string>
+    <string name="price_placeholder">£0 – 500</string>
+    <string name="duration_label">Duration:</string>
+    <string name="duration_placeholder">1 hour - 1 year</string>
+    <string name="link_label">Link:</string>
+    <string name="link_placeholder">http://</string>
+    <string name="link_hint">http://www.site-to-buy-reward.com</string>
+    <string name="upload_label">Upload image:</string>
+    <string name="upload_button">Browse device storage</string>
+    <string name="notification_label">Set notification:</string>
+    <!-- End of modify activity strings -->
 </resources>

@@ -7,6 +7,25 @@
     tools:context=".ModifyRewardActivity"
     tools:targetApi="o">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/modifyAppBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/modifyToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
     <TextView
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
@@ -14,7 +33,7 @@
         android:layout_margin="8dp"
         android:text="@string/name_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/modifyAppBar" />
 
     <EditText
         android:id="@+id/nameEditText"
@@ -125,5 +144,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uploadButton" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/modifyFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:srcCompat="@drawable/ic_add"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private LockedAdapter mLockedAdapter;
     private UnlockedAdapter mUnlockedAdapter;
     private static final int ADD_REQUEST = 0;
+    public static final String REWARD_EXTRA = "PatienceTrainingReward";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

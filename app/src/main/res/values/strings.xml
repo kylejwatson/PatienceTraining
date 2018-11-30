@@ -1,10 +1,17 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Patience Training</string>
     <string name="action_settings">Settings</string>
+
     <!-- Start of time strings -->
     <string name="countdown">
         For <xliff:g example="5.1" id="timeQuant">%.2f</xliff:g> <xliff:g example="days" id="timeQual">%s</xliff:g>
     </string>
+    <string name="duration">
+        <xliff:g example="5" id="hours">%d</xliff:g> hours, <xliff:g example="0" id="timeQual">%d</xliff:g> days, <xliff:g example="62" id="timeQual">%d</xliff:g> weeks
+    </string>
+
+    <string name="duration_title">Set a duration</string>
+    <string name="hour">Hours</string>
     <string name="day">Days</string>
     <string name="week">Weeks</string>
     <string name="month">Months</string>
@@ -12,18 +19,28 @@
     <!-- End of time strings -->
 
     <!-- Start of modify activity strings -->
-    <string name="title_activity_modify_reward">ModifyRewardActivity</string>
-    <string name="name_label">Name:</string>
+
+    <!-- Layout Strings -->
+    <string name="title_activity_modify_reward">Add a reward</string>
+    <string name="name_label">Name</string>
     <string name="name_placeholder">Name of item/reward</string>
-    <string name="price_label">Price:</string>
+    <string name="price_label">Price</string>
     <string name="price_placeholder">£0 – 500</string>
     <string name="duration_label">Duration:</string>
-    <string name="duration_placeholder">1 hour - 1 year</string>
-    <string name="link_label">Link:</string>
+    <string name="hour_placeholder">2 hours</string>
+    <string name="day_placeholder">5 days</string>
+    <string name="week_placeholder">62 weeks</string>
+    <string name="link_label">Link</string>
     <string name="link_placeholder">http://</string>
     <string name="link_hint">http://www.site-to-buy-reward.com</string>
-    <string name="upload_label">Upload image:</string>
+    <string name="upload_label">Upload image</string>
     <string name="upload_button">Browse device storage</string>
-    <string name="notification_label">Set notification:</string>
+    <string name="notification_label">Set notification </string>
+
+    <!-- Error strings -->
+    <string name="missing_input">Please enter a <xliff:g example="name for your reward." id="field">%s</xliff:g></string>
+    <string name="missing_name">name for your reward.</string>
+    <string name="missing_duration">duration that you wish to wait for.</string>
+
     <!-- End of modify activity strings -->
 </resources>

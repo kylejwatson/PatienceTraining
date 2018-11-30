@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/hourLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/hour"
+        app:layout_constraintEnd_toEndOf="@+id/hourPicker"
+        app:layout_constraintStart_toStartOf="@+id/hourPicker"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <NumberPicker
+        android:id="@+id/hourPicker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+
+        app:layout_constraintEnd_toStartOf="@+id/dayPicker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hourLabel" />
+
+    <TextView
+        android:id="@+id/dayLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/day"
+        app:layout_constraintEnd_toEndOf="@+id/dayPicker"
+        app:layout_constraintStart_toStartOf="@+id/dayPicker"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <NumberPicker
+        android:id="@+id/dayPicker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+
+        app:layout_constraintEnd_toStartOf="@+id/weekPicker"
+        app:layout_constraintStart_toEndOf="@id/hourPicker"
+        app:layout_constraintTop_toBottomOf="@+id/dayLabel" />
+
+    <TextView
+        android:id="@+id/weekLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_margin="8dp"
+        android:text="@string/week"
+        app:layout_constraintEnd_toEndOf="@+id/weekPicker"
+        app:layout_constraintStart_toStartOf="@+id/weekPicker"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <NumberPicker
+        android:id="@+id/weekPicker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/dayPicker"
+        app:layout_constraintTop_toBottomOf="@+id/weekLabel" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancelButton"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+
+        android:text="@android:string/cancel"
+        app:layout_constraintEnd_toStartOf="@id/okButton"
+        app:layout_constraintTop_toBottomOf="@+id/weekPicker" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/okButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+
+        android:text="@android:string/ok"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weekPicker" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

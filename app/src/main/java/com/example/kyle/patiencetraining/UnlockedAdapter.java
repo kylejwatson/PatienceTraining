@@ -1,15 +1,13 @@
 package com.example.kyle.patiencetraining;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class UnlockedAdapter extends RecyclerView.Adapter<UnlockedViewHolder> {

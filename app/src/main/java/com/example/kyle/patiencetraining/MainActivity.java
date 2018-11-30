@@ -18,6 +18,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Todo: make longpress edit the reward (dialog shows up to ask if you wish to edit or remove)
+     * Todo: update adapter to show hours,days,weeks?
+     * Todo: make press launch dialog to show reward info (including edit and delete options)
+     *
+     * Todo: make settings menu get all options needed
+     * Todo: Make activities/layouts for each option
+     * Todo: Start theming/dimens sorting
+     */
+
     private List<Reward> mLockedRewards = new ArrayList<>();
     private List<Reward> mUnlockedRewards = new ArrayList<>();
     private LockedAdapter mLockedAdapter;

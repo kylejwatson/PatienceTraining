@@ -2,6 +2,7 @@ package com.example.kyle.patiencetraining;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,32 +12,35 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
 
 public class ModifyRewardActivity extends AppCompatActivity {
-
     /**
-     * TODO
-     * Find out how to get imageUri filename to display
-     * Set duration dialog to time set on button
-     * Set button to starting 0 values
+     * Todo: make top nav bar have back button
+     * Todo: make activity work for modify reward (onlongpress)
+     * Todo: Only allow longer duration
      *
      */
-
     Uri imageUri;
     private static final int GET_FROM_GALLERY = 0;
-    int hours;
+    int hours = 1;
     int days;
     int weeks;
+    private TextView fileName;
+    private ImageButton clearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +57,21 @@ public class ModifyRewardActivity extends AppCompatActivity {
         });
 
 
-        final Button durationButton = findViewById(R.id.durationPicker);
+        fileName = findViewById(R.id.fileName);
+        clearButton = findViewById(R.id.removeImageButton);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageUri = null;
+                fileName.setText("");
+                clearButton.setVisibility(View.INVISIBLE);
+            }
+        });
 
-        final DurationDialog dialog = new DurationDialog(this, new DurationDialog.OnDurationSetListener() {
+        final Button durationButton = findViewById(R.id.durationPicker);
+        durationButton.setText(getString(R.string.duration, hours, days, weeks));
+
+        final DurationDialog dialog = new DurationDialog(this, getString(R.string.missing_input,getString(R.string.missing_duration)), new DurationDialog.OnDurationSetListener() {
             @Override
             public void onDurationSet(int hourSet, int daySet, int weekSet) {
                 hours = hourSet;
@@ -68,6 +84,9 @@ public class ModifyRewardActivity extends AppCompatActivity {
         durationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.setHours(hours);
+                dialog.setDays(days);
+                dialog.setWeeks(weeks);
                 dialog.show();
             }
         });
@@ -82,14 +101,11 @@ public class ModifyRewardActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(name.getText().length() == 0){
+                if(name.getText().length() == 0)
                     name.setError(getString(R.string.missing_input,getString(R.string.missing_name)));
-                }else if(hours + days + weeks == 0){
-                    TextInputLayout layout = null;// = findViewById(R.id.hourLayout);
-                    layout.setError(getString(R.string.missing_input,getString(R.string.missing_duration)));
-                }else{
+                else
                     createReward(name.getText(),price.getText(), link.getText(),notification.isChecked());
-                }
+
             }
         });
     }
@@ -115,8 +131,26 @@ public class ModifyRewardActivity extends AppCompatActivity {
         finish();
     }
 
-    public void showInputToast(String inputBox){
-        Toast.makeText(this, getString(R.string.missing_input,inputBox) ,Toast.LENGTH_SHORT).show();
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -124,6 +158,8 @@ public class ModifyRewardActivity extends AppCompatActivity {
         if(requestCode == GET_FROM_GALLERY){
             if(resultCode == RESULT_OK){
                 imageUri = data.getData();
+                fileName.setText(getFileName(imageUri));
+                clearButton.setVisibility(View.VISIBLE);
             }
         }
     }

@@ -38,7 +38,7 @@
     <string name="notification_label">Set notification </string>
 
     <!-- Error strings -->
-    <string name="missing_input">Please enter a <xliff:g example="name for your reward." id="field">%s</xliff:g></string>
+    <string name="missing_input">Error: please enter a <xliff:g example="name for your reward." id="field">%s</xliff:g></string>
     <string name="missing_name">name for your reward.</string>
     <string name="missing_duration">duration that you wish to wait for.</string>
 

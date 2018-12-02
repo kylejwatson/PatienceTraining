@@ -4,7 +4,7 @@
 
     <!-- Start of time strings -->
     <string name="countdown">
-        For <xliff:g example="5.1" id="timeQuant">%.2f</xliff:g> <xliff:g example="days" id="timeQual">%s</xliff:g>
+        For <xliff:g example="5 days" id="time">%s</xliff:g>
     </string>
     <string name="duration">
         <xliff:g example="5" id="hours">%d</xliff:g> hours, <xliff:g example="0" id="timeQual">%d</xliff:g> days, <xliff:g example="62" id="timeQual">%d</xliff:g> weeks
@@ -16,12 +16,29 @@
     <string name="week">Weeks</string>
     <string name="month">Months</string>
     <string name="year">Years</string>
+    <string name="time"><xliff:g example="5.1" id="timeQuant">%.2f</xliff:g>
+        <xliff:g example="days" id="timeQual">%s</xliff:g></string>
     <!-- End of time strings -->
+    
+    <!-- Start of click dialog unlocked strings -->
+    <string name="waited_unlocked">You have waited: <xliff:g example="5 days" id="time">%s</xliff:g> to
+        <xliff:g example="buy a new phone" id="rewardName">%s</xliff:g> costing
+        <xliff:g example="5.1" id="cost">%.2f</xliff:g></string>
+    <string name="collect_button">Collect your reward!</string>
+    <!-- End of click dialog unlocked strings -->
+    <string name="imageContentDescription">Image of your reward</string>
+    <!-- Start of click dialog locked strings -->
+    <string name="waited_locked">You have waited: <xliff:g example="5 days" id="time">%s</xliff:g>
+        out of <xliff:g example="5 days" id="time">%s</xliff:g> to
+        <xliff:g example="buy a new phone" id="rewardName">%s</xliff:g></string>
+    <string name="wait_button">Wait for your reward!</string>
+    <!-- End of click dialog locked strings -->
 
     <!-- Start of modify activity strings -->
 
     <!-- Layout Strings -->
-    <string name="title_activity_modify_reward">Add a reward</string>
+    <string name="title_activity_add_reward">Add a reward</string>
+    <string name="title_activity_modify_reward">Edit a reward</string>
     <string name="name_label">Name</string>
     <string name="name_placeholder">Name of item/reward</string>
     <string name="price_label">Price</string>

@@ -26,32 +26,35 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class ModifyRewardActivity extends AppCompatActivity {
     /**
      * Todo: make top nav bar have back button
-     * Todo: make activity work for modify reward (onlongpress)
-     * Todo: Only allow longer duration
      *
      */
-    Uri imageUri;
+    private Uri imageUri;
     private static final int GET_FROM_GALLERY = 0;
-    int hours = 1;
-    int days;
-    int weeks;
+    private int hours = 1;
+    private int days;
+    private int weeks;
     private TextView fileName;
     private ImageButton clearButton;
+    private Reward oldReward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_reward);
 
+        oldReward = getIntent().getParcelableExtra(MainActivity.REWARD_EXTRA);
+
+
         Button uploadButton = findViewById(R.id.uploadButton);
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(Intent.ACTION_PICK,
+                startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT,
                         android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
             }
         });
@@ -103,11 +106,49 @@ public class ModifyRewardActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(name.getText().length() == 0)
                     name.setError(getString(R.string.missing_input,getString(R.string.missing_name)));
-                else
-                    createReward(name.getText(),price.getText(), link.getText(),notification.isChecked());
+                else {
+                    if(oldReward != null)
+                        modReward(name.getText(), price.getText(), link.getText(), notification.isChecked());
+                    else
+                        createReward(name.getText(), price.getText(), link.getText(), notification.isChecked());
+                }
 
             }
         });
+
+        if(oldReward != null){
+            durationButton.setVisibility(View.GONE);
+            TextView durationLabel = findViewById(R.id.durationLabel);
+            durationLabel.setVisibility(View.GONE);
+            fab.setImageResource(R.drawable.ic_save);
+            name.setText(oldReward.getName());
+            price.setText(String.format(Locale.getDefault(), "%.2f", oldReward.getPrice()));
+            link.setText(oldReward.getLink());
+            notification.setChecked(oldReward.isNotificationSet());
+            imageUri = oldReward.getImagePath();
+            if(imageUri != null) {
+                fileName.setText(getFileName(imageUri));
+                clearButton.setVisibility(View.VISIBLE);
+            }
+            getSupportActionBar().setTitle(R.string.title_activity_modify_reward);
+        }
+    }
+
+    public void modReward(Editable name,  Editable price, Editable link, boolean notification){
+        float priceFloat = 0f;
+        if(price.length() != 0)
+            priceFloat = Float.parseFloat(price.toString());
+        oldReward.setPrice(priceFloat);
+        oldReward.setName(name.toString());
+        oldReward.setLink(link.toString());
+        oldReward.setNotificationSet(notification);
+        oldReward.setImagePath(imageUri);
+
+        Intent intent = new Intent();
+        intent.putExtra(MainActivity.REWARD_EXTRA, oldReward);
+        intent.putExtra(MainActivity.REWARD_POSITION_EXTRA,getIntent().getIntExtra(MainActivity.REWARD_POSITION_EXTRA,0));
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     public void createReward(Editable name, Editable price, Editable link, boolean notification){

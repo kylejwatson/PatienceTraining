@@ -13,15 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     /**
-     * Todo: make longpress edit the reward (dialog shows up to ask if you wish to edit or remove)
+     * Todo: make longpress (dialog shows up to ask if you wish to edit or remove)
      * Todo: update adapter to show hours,days,weeks?
-     * Todo: make press launch dialog to show reward info (including edit and delete options)
+     * Todo: make press launch dialog (including edit and delete options)
      *
      * Todo: make settings menu get all options needed
      * Todo: Make activities/layouts for each option
@@ -33,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private LockedAdapter mLockedAdapter;
     private UnlockedAdapter mUnlockedAdapter;
     private static final int ADD_REQUEST = 0;
+    private static final int MOD_REQUEST = 1;
     public static final String REWARD_EXTRA = "PatienceTrainingReward";
+    public static final String REWARD_POSITION_EXTRA = "PatienceTrainingRewardPosition";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +44,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-       FloatingActionButton fab = findViewById(R.id.fab);
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.add(Calendar.DAY_OF_YEAR, -20);
+        Date startTime = startCalendar.getTime();
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.add(Calendar.DAY_OF_YEAR, -3);
+        Date endTime = endCalendar.getTime();
+        assignRewardToList(new Reward("test",200,startTime, endTime,"lll",null,true));
+        updateUI();
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == ADD_REQUEST){
             if(resultCode == RESULT_OK){
                 assignRewardToList((Reward)data.getParcelableExtra(REWARD_EXTRA));
+                updateUI();
+            }
+        }else if(requestCode == MOD_REQUEST){
+            if(resultCode == RESULT_OK){
+                int position = data.getIntExtra(REWARD_POSITION_EXTRA, 0);
+                Reward reward = data.getParcelableExtra(REWARD_EXTRA);
+                mLockedRewards.set(position, reward);
                 updateUI();
             }
         }
@@ -106,7 +123,17 @@ public class MainActivity extends AppCompatActivity {
             mLockedAdapter = new LockedAdapter(this, mLockedRewards, new LockedViewHolder.LockedClickListener() {
                 @Override
                 public void rewardOnClick(int i) {
-                    //Launch locked fragment
+                    ClickedRewardDialog dialog = new ClickedRewardDialog(MainActivity.this, mLockedRewards.get(i));
+                    dialog.show();
+                }
+            }, new LockedViewHolder.LongClickListener() {
+                @Override
+                public boolean rewardOnLongClick(int i) {
+                    Intent intent = new Intent(MainActivity.this,ModifyRewardActivity.class);
+                    intent.putExtra(REWARD_EXTRA, mLockedRewards.get(i));
+                    intent.putExtra(REWARD_POSITION_EXTRA, i);
+                    startActivityForResult(intent, MOD_REQUEST);
+                    return false;
                 }
             });
             RecyclerView lockedRecyclerView = findViewById(R.id.lockedRecyclerView);
@@ -118,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
             mUnlockedAdapter = new UnlockedAdapter(mUnlockedRewards, new UnlockedViewHolder.UnlockedClickListener() {
                 @Override
                 public void rewardOnClick(int i) {
-                    //launch unlocked fragment
+                    ClickedRewardDialog dialog = new ClickedRewardDialog(MainActivity.this, mUnlockedRewards.get(i));
+                    dialog.show();
                 }
             });
             RecyclerView unlockedRecyclerView = findViewById(R.id.unlockedRecyclerView);

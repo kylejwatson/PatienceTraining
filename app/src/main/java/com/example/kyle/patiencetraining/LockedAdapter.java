@@ -7,20 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class LockedAdapter extends RecyclerView.Adapter<LockedViewHolder> {
     private List<Reward> mRewards;
     private LockedViewHolder.LockedClickListener mLockedClickListener;
-    private LockedViewHolder.LongClickListener mLongClickListener;
     private Context mContext;
 
-    public LockedAdapter(Context context, List<Reward> mRewards, LockedViewHolder.LockedClickListener mLockedClickListener, LockedViewHolder.LongClickListener mLongClickListener) {
+    public LockedAdapter(Context context, List<Reward> mRewards, LockedViewHolder.LockedClickListener mLockedClickListener) {
         this.mRewards = mRewards;
         this.mLockedClickListener = mLockedClickListener;
-        this.mLongClickListener = mLongClickListener;
         mContext = context;
     }
 
@@ -31,7 +28,7 @@ public class LockedAdapter extends RecyclerView.Adapter<LockedViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.locked_grid_cell, viewGroup, false);
 
-        return new LockedViewHolder(view,mLockedClickListener, mLongClickListener);
+        return new LockedViewHolder(view,mLockedClickListener);
     }
 
     @Override

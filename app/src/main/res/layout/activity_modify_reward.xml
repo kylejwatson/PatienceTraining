@@ -85,7 +85,6 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textUri"
-            android:text="@string/link_placeholder"
             android:hint="@string/link_label"
             android:importantForAutofill="no" />
 

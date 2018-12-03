@@ -67,17 +67,30 @@
         app:layout_constraintStart_toEndOf="@id/dayPicker"
         app:layout_constraintTop_toBottomOf="@+id/weekLabel" />
 
+    <ImageView
+        android:id="@+id/errorImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hourPicker"
+        app:srcCompat="@drawable/ic_error" />
+
     <TextView
         android:id="@+id/errorTextView"
+        style="@style/TextAppearance.MaterialComponents.Error"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
         android:text="@string/missing_input"
-        style="@style/TextAppearance.MaterialComponents.Error"
         android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/errorImageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dayPicker" />
+        app:layout_constraintStart_toEndOf="@+id/errorImageView"
+        app:layout_constraintTop_toTopOf="@+id/errorImageView" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cancelButton"
@@ -88,17 +101,17 @@
 
         android:text="@android:string/cancel"
         app:layout_constraintEnd_toStartOf="@id/okButton"
-        app:layout_constraintTop_toBottomOf="@+id/errorTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/errorImageView" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/okButton"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
 
+        android:layout_margin="8dp"
         android:text="@android:string/ok"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/errorTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/errorImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

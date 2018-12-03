@@ -20,7 +20,8 @@
         </activity>
         <activity
             android:name=".ModifyRewardActivity"
-            android:label="@string/title_activity_add_reward" />
+            android:label="@string/title_activity_add_reward"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

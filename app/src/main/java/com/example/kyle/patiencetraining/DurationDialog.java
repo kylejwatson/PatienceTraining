@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -18,12 +19,14 @@ public class DurationDialog extends Dialog {
     private final NumberPicker weekPicker;
     private final String error;
     private final  TextView errorText;
+    private final ImageView errorIcon;
     private final Button okButton;
 
     public DurationDialog(@NonNull Context context, String error, final OnDurationSetListener listener) {
         super(context);
         setContentView(R.layout.dialog_duration_picker);
         errorText = findViewById(R.id.errorTextView);
+        errorIcon = findViewById(R.id.errorImageView);
         this.error = error;
         errorText.setText(error);
         setTitle(R.string.duration_title);
@@ -94,12 +97,14 @@ public class DurationDialog extends Dialog {
         }
     }
 
-    public void setError(String errorString){
+    private void setError(String errorString){
         if(errorString == null) {
             errorText.setVisibility(View.INVISIBLE);
+            errorIcon.setVisibility(View.INVISIBLE);
             okButton.setEnabled(true);
         }else{
             errorText.setVisibility(View.VISIBLE);
+            errorIcon.setVisibility(View.VISIBLE);
             errorText.setText(errorString);
             okButton.setEnabled(false);
         }

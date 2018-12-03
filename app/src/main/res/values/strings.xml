@@ -27,6 +27,9 @@
     <string name="collect_button">Collect your reward!</string>
     <!-- End of click dialog unlocked strings -->
     <string name="imageContentDescription">Image of your reward</string>
+    <string name="delete_confirmation">Are you sure you want to delete this reward?</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
     <!-- Start of click dialog locked strings -->
     <string name="waited_locked">You have waited: <xliff:g example="5 days" id="time">%s</xliff:g>
         out of <xliff:g example="5 days" id="time">%s</xliff:g> to
@@ -48,16 +51,19 @@
     <string name="day_placeholder">5 days</string>
     <string name="week_placeholder">62 weeks</string>
     <string name="link_label">Link</string>
-    <string name="link_placeholder">http://</string>
     <string name="link_hint">http://www.site-to-buy-reward.com</string>
     <string name="upload_label">Upload image</string>
     <string name="upload_button">Browse device storage</string>
     <string name="notification_label">Set notification </string>
+    <string name="http">http://</string>
+    <string name="http_link">http://<xliff:g example="www.example.com" id="link">%s</xliff:g></string>
+    <string name="https">https://</string>
 
     <!-- Error strings -->
     <string name="missing_input">Error: please enter a <xliff:g example="name for your reward." id="field">%s</xliff:g></string>
     <string name="missing_name">name for your reward.</string>
     <string name="missing_duration">duration that you wish to wait for.</string>
+    <string name="invalid_link">The link you entered is not a valid URL.</string>
 
     <!-- End of modify activity strings -->
 </resources>

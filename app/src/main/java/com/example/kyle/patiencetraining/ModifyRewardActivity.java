@@ -1,32 +1,27 @@
 package com.example.kyle.patiencetraining;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.provider.OpenableColumns;
 import android.text.Editable;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.NumberPicker;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ModifyRewardActivity extends AppCompatActivity {
     /**
@@ -104,9 +99,12 @@ public class ModifyRewardActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                link.setText(buildLink(link.getText().toString()));
                 if(name.getText().length() == 0)
                     name.setError(getString(R.string.missing_input,getString(R.string.missing_name)));
-                else {
+                else if(link.getText().length() > 0 && Patterns.WEB_URL.matcher(link.getText()).matches()) {
+                    link.setError(getString(R.string.invalid_link));
+                }else {
                     if(oldReward != null)
                         modReward(name.getText(), price.getText(), link.getText(), notification.isChecked());
                     else
@@ -130,7 +128,7 @@ public class ModifyRewardActivity extends AppCompatActivity {
                 fileName.setText(getFileName(imageUri));
                 clearButton.setVisibility(View.VISIBLE);
             }
-            getSupportActionBar().setTitle(R.string.title_activity_modify_reward);
+            Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_activity_modify_reward);
         }
     }
 
@@ -149,6 +147,13 @@ public class ModifyRewardActivity extends AppCompatActivity {
         intent.putExtra(MainActivity.REWARD_POSITION_EXTRA,getIntent().getIntExtra(MainActivity.REWARD_POSITION_EXTRA,0));
         setResult(RESULT_OK,intent);
         finish();
+    }
+
+    public String buildLink(String link){
+        if(!link.startsWith(getString(R.string.http)) && !link.startsWith(getString(R.string.https)) && !link.isEmpty()){
+            link = getString(R.string.http_link, link);
+        }
+        return link;
     }
 
     public void createReward(Editable name, Editable price, Editable link, boolean notification){
@@ -174,19 +179,16 @@ public class ModifyRewardActivity extends AppCompatActivity {
 
     public String getFileName(Uri uri) {
         String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            try {
+        if (Objects.equals(uri.getScheme(), "content")) {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
-            } finally {
-                cursor.close();
             }
         }
         if (result == null) {
             result = uri.getPath();
-            int cut = result.lastIndexOf('/');
+            int cut = Objects.requireNonNull(result).lastIndexOf('/');
             if (cut != -1) {
                 result = result.substring(cut + 1);
             }

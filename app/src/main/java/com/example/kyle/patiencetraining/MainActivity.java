@@ -1,5 +1,8 @@
 package com.example.kyle.patiencetraining;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,11 +23,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int SHOW_NOTIFICATION_JOB_ID = 20;
     /**
+     * Todo: send reward name into notification/add refresh function to be called from notification onClick
+     *
      * Todo: update adapter to show hours,days,weeks?
+     * Todo: show 'no rewards added' page if empty
      *
      * Todo: make settings menu get all options needed
      * Todo: Make activities/layouts for each option
@@ -76,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
         endCalendar.add(Calendar.DAY_OF_YEAR, -3);
         Date endTime = endCalendar.getTime();
         assignRewardToList(new Reward("test",200,startTime, endTime,"https://www.google.com",null,true));
+
+        //Example 'locked' for 30 second reward
+        endCalendar = Calendar.getInstance();
+        endCalendar.setTime(new Date());
+        endCalendar.add(Calendar.SECOND, 30);
+        endTime = endCalendar.getTime();
+        assignRewardToList(new Reward("testLocked",200,startTime,endTime,"",null,true));
         updateUI();
     }
 
@@ -128,12 +145,29 @@ public class MainActivity extends AppCompatActivity {
         updateUI();
     }
 
+    public void setNotification(Reward reward){
+        if(reward.isNotificationSet()) {
+            Date now = new Date();
+            JobScheduler jobScheduler =
+                    (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            long millis = reward.getFinish().getTime() - now.getTime();
+            Objects.requireNonNull(jobScheduler).schedule(new JobInfo.Builder(SHOW_NOTIFICATION_JOB_ID,
+                    new ComponentName(this, NotificationService.class))
+                    .setMinimumLatency(millis)
+                    .build());
+        }else{
+            //cancel the job scheduler somehow? If not remove the option from individual object
+        }
+    }
+
     public void assignRewardToList(Reward reward){
         Date now = new Date();
         if(now.after(reward.getFinish()))
             mUnlockedRewards.add(reward);
-        else
+        else {
             mLockedRewards.add(reward);
+            setNotification(reward);
+        }
     }
 
     public void editReward(int position){

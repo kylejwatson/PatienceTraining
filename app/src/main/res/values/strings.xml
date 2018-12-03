@@ -64,6 +64,9 @@
     <string name="missing_name">name for your reward.</string>
     <string name="missing_duration">duration that you wish to wait for.</string>
     <string name="invalid_link">The link you entered is not a valid URL.</string>
+    <string name="notification_title">A reward has unlocked!</string>
+    <string name="channel_name">Unlocked Rewards</string>
+    <string name="channel_description">Notifications will appear when a new reward is unlocked.</string>
 
     <!-- End of modify activity strings -->
 </resources>

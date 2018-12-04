@@ -14,6 +14,7 @@ public class Reward implements Parcelable {
     private String link;
     private Uri imagePath;
     private boolean notificationSet;
+    private int notificationJobId;
 
     public Reward(String name, float price, Date start, Date finish, String link, Uri imagePath, boolean notificationSet) {
         this.name = name;
@@ -33,6 +34,7 @@ public class Reward implements Parcelable {
         link = in.readString();
         imagePath = in.readParcelable(Uri.class.getClassLoader());
         notificationSet = in.readByte() != 0;
+        notificationJobId = in.readInt();
     }
 
     public static final Creator<Reward> CREATOR = new Creator<Reward>() {
@@ -117,5 +119,14 @@ public class Reward implements Parcelable {
         parcel.writeString(link);
         parcel.writeParcelable(imagePath,i);
         parcel.writeByte((byte) (notificationSet ? 1 : 0));
+        parcel.writeInt(notificationJobId);
+    }
+
+    public int getNotificationJobId() {
+        return notificationJobId;
+    }
+
+    public void setNotificationJobId(int notificationJobId) {
+        this.notificationJobId = notificationJobId;
     }
 }

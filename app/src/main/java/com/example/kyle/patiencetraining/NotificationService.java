@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.os.Build;
+import android.util.Log;
 
 import java.util.Objects;
 
@@ -19,17 +20,19 @@ public class NotificationService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
+        String name = jobParameters.getExtras().getString(MainActivity.REWARD_NAME_BUNDLE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_unlock)
                 .setContentTitle(getString(R.string.notification_title))
-                .setContentText("Your reward is ready")
+                .setContentText(getString(R.string.notification_text, name))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         createNotificationChannel();
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
         int notificationId = jobParameters.getJobId();
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(notificationId, mBuilder.build());
-        return onStopJob(jobParameters);
+        return false;
     }
 
     private void createNotificationChannel() {
@@ -50,6 +53,6 @@ public class NotificationService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        return true;
+        return false;
     }
 }

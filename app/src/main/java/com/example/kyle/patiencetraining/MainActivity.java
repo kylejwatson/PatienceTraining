@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -27,9 +28,10 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int SHOW_NOTIFICATION_JOB_ID = 20;
     /**
-     * Todo: send reward name into notification/add refresh function to be called from notification onClick
+     * Todo: make ROOM database so rewards are stored and the correct one is shown on notification click
+     * Todo: add refresh function to be called from notification onClick
+     * Todo: make main activity use fragments, one with main page one with leaderboard, could potentially split locked and unlocked into there own fragments
      *
      * Todo: update adapter to show hours,days,weeks?
      * Todo: show 'no rewards added' page if empty
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int MOD_REQUEST = 1;
     public static final String REWARD_EXTRA = "PatienceTrainingReward";
     public static final String REWARD_POSITION_EXTRA = "PatienceTrainingRewardPosition";
+    public static final String REWARD_NAME_BUNDLE = "RewardName";
+
     private LockedClickedReward.OnEditListener editListener = new LockedClickedReward.OnEditListener() {
         @Override
         public void onEdit(int position) {
@@ -90,9 +94,17 @@ public class MainActivity extends AppCompatActivity {
         //Example 'locked' for 30 second reward
         endCalendar = Calendar.getInstance();
         endCalendar.setTime(new Date());
-        endCalendar.add(Calendar.SECOND, 30);
+        endCalendar.add(Calendar.SECOND, 3);
         endTime = endCalendar.getTime();
         assignRewardToList(new Reward("testLocked",200,startTime,endTime,"",null,true));
+
+        endCalendar.add(Calendar.SECOND, 3);
+        endTime = endCalendar.getTime();
+        assignRewardToList(new Reward("testLocked2",200,new Date(),endTime,"",null,true));
+
+        endCalendar.add(Calendar.SECOND, 30);
+        endTime = endCalendar.getTime();
+        assignRewardToList(new Reward("testLocked3",200,new Date(),endTime,"",null,true));
         updateUI();
     }
 
@@ -146,17 +158,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setNotification(Reward reward){
+
+        JobScheduler jobScheduler =
+                Objects.requireNonNull((JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE));
         if(reward.isNotificationSet()) {
+            if(reward.getNotificationJobId() == 0)
+                reward.setNotificationJobId(reward.getStart().hashCode());
             Date now = new Date();
-            JobScheduler jobScheduler =
-                    (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             long millis = reward.getFinish().getTime() - now.getTime();
-            Objects.requireNonNull(jobScheduler).schedule(new JobInfo.Builder(SHOW_NOTIFICATION_JOB_ID,
+            PersistableBundle bundle = new PersistableBundle();
+            bundle.putString(REWARD_NAME_BUNDLE, reward.getName());
+            jobScheduler.schedule(new JobInfo.Builder(reward.getNotificationJobId(),
                     new ComponentName(this, NotificationService.class))
                     .setMinimumLatency(millis)
+                    .setExtras(bundle)
                     .build());
         }else{
-            //cancel the job scheduler somehow? If not remove the option from individual object
+            jobScheduler.cancel(reward.getNotificationJobId());
         }
     }
 

@@ -2,9 +2,12 @@ package com.example.kyle.patiencetraining;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import java.net.URI;
 
 import androidx.annotation.NonNull;
 
@@ -27,7 +30,7 @@ public abstract class ClickedRewardDialog extends Dialog {
     private void setImage(Reward reward){
         ImageView imageView = findViewById(R.id.clickedImageView);
         imageView.setImageURI(null);
-        imageView.setImageURI(reward.getImagePath());
+        imageView.setImageURI(Uri.parse(reward.getImagePath()));
     }
 
     public interface OnDeleteListener{

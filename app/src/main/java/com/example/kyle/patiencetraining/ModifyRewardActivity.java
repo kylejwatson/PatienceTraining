@@ -25,7 +25,7 @@ import java.util.Objects;
 
 public class ModifyRewardActivity extends AppCompatActivity {
     /**
-     * Todo: make top nav bar have back button
+     * Todo: allow editing of seconds just for demoing/testing
      *
      */
     private Uri imageUri;
@@ -123,7 +123,7 @@ public class ModifyRewardActivity extends AppCompatActivity {
             price.setText(String.format(Locale.getDefault(), "%.2f", oldReward.getPrice()));
             link.setText(oldReward.getLink());
             notification.setChecked(oldReward.isNotificationSet());
-            imageUri = oldReward.getImagePath();
+            imageUri = Uri.parse(oldReward.getImagePath());
             if(imageUri != null) {
                 fileName.setText(getFileName(imageUri));
                 clearButton.setVisibility(View.VISIBLE);
@@ -140,11 +140,10 @@ public class ModifyRewardActivity extends AppCompatActivity {
         oldReward.setName(name.toString());
         oldReward.setLink(link.toString());
         oldReward.setNotificationSet(notification);
-        oldReward.setImagePath(imageUri);
+        oldReward.setImagePath(imageUri.toString());
 
         Intent intent = new Intent();
         intent.putExtra(MainActivity.REWARD_EXTRA, oldReward);
-        intent.putExtra(MainActivity.REWARD_POSITION_EXTRA,getIntent().getIntExtra(MainActivity.REWARD_POSITION_EXTRA,0));
         setResult(RESULT_OK,intent);
         finish();
     }
@@ -169,7 +168,11 @@ public class ModifyRewardActivity extends AppCompatActivity {
         if(price.length() != 0)
             priceFloat = Float.parseFloat(price.toString());
 
-        Reward reward = new Reward(name.toString(),priceFloat,now,endDate, link.toString(),imageUri,notification);
+        String image = "";
+        if(imageUri != null)
+            image = imageUri.toString();
+
+        Reward reward = new Reward(name.toString(),priceFloat,now.getTime(),endDate.getTime(), link.toString(),image,notification);
 
         Intent intent = new Intent();
         intent.putExtra(MainActivity.REWARD_EXTRA, reward);

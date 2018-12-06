@@ -36,7 +36,7 @@ public class LockedAdapter extends RecyclerView.Adapter<LockedViewHolder> {
         Reward reward = mRewards.get(i);
 
         lockedViewHolder.nameTextView.setText(reward.getName());
-        Date date = reward.getFinish();
+        Date date = new Date(reward.getFinish());
         String timeString = TimeString.getTimeString(new Date(), date, mContext);
         String time = mContext.getString(R.string.countdown,timeString);
         lockedViewHolder.timeTextView.setText(time);

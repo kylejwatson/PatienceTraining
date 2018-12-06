@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
+import java.util.Date;
+
 import androidx.annotation.NonNull;
 
 public class UnlockedClickedReward extends  ClickedRewardDialog{
@@ -16,7 +18,7 @@ public class UnlockedClickedReward extends  ClickedRewardDialog{
         super(context, reward, position, deleteListener);
         TextView textView = findViewById(R.id.descriptionTextView);
         Button button = findViewById(R.id.collectButton);
-        String time = TimeString.getTimeString(reward.getStart(), reward.getFinish(),context);
+        String time = TimeString.getTimeString(new Date(reward.getStart()), new Date(reward.getFinish()),context);
         String description = context.getString(R.string.waited_unlocked, time, reward.getName(), reward.getPrice());
         textView.setText(description);
         button.setText(R.string.collect_button);

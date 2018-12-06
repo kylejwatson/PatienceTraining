@@ -5,9 +5,12 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,8 +32,6 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     /**
-     * Todo: make ROOM database so rewards are stored and the correct one is shown on notification click
-     * Todo: add refresh function to be called from notification onClick
      * Todo: make main activity use fragments, one with main page one with leaderboard, could potentially split locked and unlocked into there own fragments
      *
      * Todo: update adapter to show hours,days,weeks?
@@ -48,8 +49,14 @@ public class MainActivity extends AppCompatActivity {
     private static final int ADD_REQUEST = 0;
     public static final int MOD_REQUEST = 1;
     public static final String REWARD_EXTRA = "PatienceTrainingReward";
-    public static final String REWARD_POSITION_EXTRA = "PatienceTrainingRewardPosition";
     public static final String REWARD_NAME_BUNDLE = "RewardName";
+    public static final String REWARD_ID_BUNDLE = "RewardID";
+    public final static int TASK_GET_ALL_REWARDS = 0;
+    public final static int TASK_DELETE_REWARDS = 1;
+    public final static int TASK_UPDATE_REWARDS = 2;
+    public final static int TASK_INSERT_REWARDS = 3;
+    private static AppDatabase sDatabase;
+    private long rewardId;
 
     private LockedClickedReward.OnEditListener editListener = new LockedClickedReward.OnEditListener() {
         @Override
@@ -65,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        sDatabase = AppDatabase.getInstance(this);
+        Intent intent = getIntent();
+        rewardId = intent.getLongExtra(NotificationService.REWARD_ID_EXTRA,-1);
+        Log.d("ID", "onCreate: " + rewardId);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,46 +91,18 @@ public class MainActivity extends AppCompatActivity {
                         //Do nothing
                     }
                 });
-
-        //Example 'unlocked' reward
-        Calendar startCalendar = Calendar.getInstance();
-        startCalendar.add(Calendar.DAY_OF_YEAR, -20);
-        Date startTime = startCalendar.getTime();
-        Calendar endCalendar = Calendar.getInstance();
-        endCalendar.add(Calendar.DAY_OF_YEAR, -3);
-        Date endTime = endCalendar.getTime();
-        assignRewardToList(new Reward("test",200,startTime, endTime,"https://www.google.com",null,true));
-
-        //Example 'locked' for 30 second reward
-        endCalendar = Calendar.getInstance();
-        endCalendar.setTime(new Date());
-        endCalendar.add(Calendar.SECOND, 3);
-        endTime = endCalendar.getTime();
-        assignRewardToList(new Reward("testLocked",200,startTime,endTime,"",null,true));
-
-        endCalendar.add(Calendar.SECOND, 3);
-        endTime = endCalendar.getTime();
-        assignRewardToList(new Reward("testLocked2",200,new Date(),endTime,"",null,true));
-
-        endCalendar.add(Calendar.SECOND, 30);
-        endTime = endCalendar.getTime();
-        assignRewardToList(new Reward("testLocked3",200,new Date(),endTime,"",null,true));
-        updateUI();
+        new RewardAsyncTask(TASK_GET_ALL_REWARDS).execute();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == ADD_REQUEST){
             if(resultCode == RESULT_OK){
-                assignRewardToList((Reward)data.getParcelableExtra(REWARD_EXTRA));
-                updateUI();
+                new RewardAsyncTask(TASK_INSERT_REWARDS).execute((Reward)data.getParcelableExtra(REWARD_EXTRA));
             }
         }else if(requestCode == MOD_REQUEST){
             if(resultCode == RESULT_OK){
-                int position = data.getIntExtra(REWARD_POSITION_EXTRA, 0);
-                Reward reward = data.getParcelableExtra(REWARD_EXTRA);
-                mLockedRewards.set(position, reward);
-                updateUI();
+                new RewardAsyncTask(TASK_UPDATE_REWARDS).execute((Reward)data.getParcelableExtra(REWARD_EXTRA));
             }
         }
     }
@@ -162,12 +144,11 @@ public class MainActivity extends AppCompatActivity {
         JobScheduler jobScheduler =
                 Objects.requireNonNull((JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE));
         if(reward.isNotificationSet()) {
-            if(reward.getNotificationJobId() == 0)
-                reward.setNotificationJobId(reward.getStart().hashCode());
             Date now = new Date();
-            long millis = reward.getFinish().getTime() - now.getTime();
+            long millis = reward.getFinish() - now.getTime();
             PersistableBundle bundle = new PersistableBundle();
             bundle.putString(REWARD_NAME_BUNDLE, reward.getName());
+            bundle.putLong(REWARD_ID_BUNDLE, reward.getId());
             jobScheduler.schedule(new JobInfo.Builder(reward.getNotificationJobId(),
                     new ComponentName(this, NotificationService.class))
                     .setMinimumLatency(millis)
@@ -180,18 +161,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void assignRewardToList(Reward reward){
         Date now = new Date();
-        if(now.after(reward.getFinish()))
+        if(now.after(new Date(reward.getFinish()))) {
             mUnlockedRewards.add(reward);
-        else {
+            reward.setNotificationSet(false);
+        }else {
             mLockedRewards.add(reward);
-            setNotification(reward);
         }
+        setNotification(reward);
     }
 
     public void editReward(int position){
         Intent intent = new Intent(MainActivity.this,ModifyRewardActivity.class);
         intent.putExtra(REWARD_EXTRA, mLockedRewards.get(position));
-        intent.putExtra(REWARD_POSITION_EXTRA, position);
         startActivityForResult(intent, MOD_REQUEST);
     }
 
@@ -204,12 +185,11 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onDelete(final int position) {
                             deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            mLockedRewards.remove(position);
-                                            updateUI();
-                                        }
-                                    }).show();
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    new RewardAsyncTask(TASK_DELETE_REWARDS).execute(mLockedRewards.get(position));
+                                }
+                            }).show();
                         }
                     },editListener);
                     dialog.show();
@@ -224,19 +204,7 @@ public class MainActivity extends AppCompatActivity {
             mUnlockedAdapter = new UnlockedAdapter(mUnlockedRewards, new UnlockedViewHolder.UnlockedClickListener() {
                 @Override
                 public void rewardOnClick(int i) {
-                    ClickedRewardDialog dialog = new UnlockedClickedReward(MainActivity.this, mUnlockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener(){
-                        @Override
-                        public void onDelete(final int position) {
-                            deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            mUnlockedRewards.remove(position);
-                                            updateUI();
-                                        }
-                                    }).show();
-                        }
-                    });
-                    dialog.show();
+                    onUnlockedClicked(i);
                 }
             });
             RecyclerView unlockedRecyclerView = findViewById(R.id.unlockedRecyclerView);
@@ -244,6 +212,61 @@ public class MainActivity extends AppCompatActivity {
             unlockedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
         mUnlockedAdapter.notifyDataSetChanged();
+        for(int i = 0; i < mUnlockedRewards.size(); i++){
+            if(mUnlockedRewards.get(i).getId() == rewardId){
+                onUnlockedClicked(i);
+                rewardId = -1;
+            }
+        }
+    }
+
+    private void onUnlockedClicked(int i){
+        ClickedRewardDialog dialog = new UnlockedClickedReward(MainActivity.this, mUnlockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener(){
+            @Override
+            public void onDelete(final int position) {
+                deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        new RewardAsyncTask(TASK_DELETE_REWARDS).execute(mUnlockedRewards.get(position));
+                    }
+                }).show();
+            }
+        });
+        dialog.show();
+    }
+
+
+    private void onRewardDbUpdated(List<Reward> list) {
+        separateList(list);
+    }
+
+    public class RewardAsyncTask extends AsyncTask<Reward, Void, List<Reward>>{
+
+        private int task;
+        public RewardAsyncTask(int task){
+            this.task = task;
+        }
+        @Override
+        protected List<Reward> doInBackground(Reward... rewards) {
+            switch (task){
+                case TASK_INSERT_REWARDS:
+                    sDatabase.rewardDao().insertRewards(rewards[0]);
+                    break;
+                case TASK_UPDATE_REWARDS:
+                    sDatabase.rewardDao().updateRewards(rewards[0]);
+                    break;
+                case TASK_DELETE_REWARDS:
+                    sDatabase.rewardDao().deleteRewards(rewards[0]);
+                    break;
+            }
+            return sDatabase.rewardDao().getAllRewards();
+        }
+
+        @Override
+        protected void onPostExecute(List<Reward> list) {
+            super.onPostExecute(list);
+            onRewardDbUpdated(list);
+        }
     }
 
 }

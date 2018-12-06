@@ -1,22 +1,46 @@
 package com.example.kyle.patiencetraining;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.PersistableBundle;
 
 import java.util.Date;
+import java.util.Objects;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import static android.content.Context.JOB_SCHEDULER_SERVICE;
+
+@Entity(tableName = "reward")
 public class Reward implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+
+    @ColumnInfo(name = "name")
     private String name;
+    @ColumnInfo(name = "price")
     private float price;
-    private Date start;
-    private Date finish;
+    @ColumnInfo(name = "start")
+    private long start;
+    @ColumnInfo(name = "finish")
+    private long finish;
+    @ColumnInfo(name = "link")
     private String link;
-    private Uri imagePath;
+    @ColumnInfo(name = "imagePath")
+    private String imagePath;
+    @ColumnInfo(name = "notificationSet")
     private boolean notificationSet;
+    @ColumnInfo(name = "notificationJobId")
     private int notificationJobId;
 
-    public Reward(String name, float price, Date start, Date finish, String link, Uri imagePath, boolean notificationSet) {
+    public Reward(String name, float price, long start, long finish, String link, String imagePath, boolean notificationSet) {
         this.name = name;
         this.price = price;
         this.start = start;
@@ -24,15 +48,17 @@ public class Reward implements Parcelable {
         this.link = link;
         this.imagePath = imagePath;
         this.notificationSet = notificationSet;
+        notificationJobId = new Date(start).hashCode();
     }
 
     protected Reward(Parcel in) {
+        id = in.readLong();
         name = in.readString();
         price = in.readFloat();
-        start = new Date(in.readLong());
-        finish = new Date(in.readLong());
+        start = in.readLong();
+        finish = in.readLong();
         link = in.readString();
-        imagePath = in.readParcelable(Uri.class.getClassLoader());
+        imagePath = in.readString();
         notificationSet = in.readByte() != 0;
         notificationJobId = in.readInt();
     }
@@ -48,6 +74,14 @@ public class Reward implements Parcelable {
             return new Reward[size];
         }
     };
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -65,19 +99,19 @@ public class Reward implements Parcelable {
         this.price = price;
     }
 
-    public Date getStart() {
+    public long getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(long start) {
         this.start = start;
     }
 
-    public Date getFinish() {
+    public long getFinish() {
         return finish;
     }
 
-    public void setFinish(Date finish) {
+    public void setFinish(long finish) {
         this.finish = finish;
     }
 
@@ -89,11 +123,11 @@ public class Reward implements Parcelable {
         this.link = link;
     }
 
-    public Uri getImagePath() {
+    public String getImagePath() {
         return imagePath;
     }
 
-    public void setImagePath(Uri imagePath) {
+    public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
@@ -112,12 +146,13 @@ public class Reward implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
         parcel.writeString(name);
         parcel.writeFloat(price);
-        parcel.writeLong(start.getTime());
-        parcel.writeLong(finish.getTime());
+        parcel.writeLong(start);
+        parcel.writeLong(finish);
         parcel.writeString(link);
-        parcel.writeParcelable(imagePath,i);
+        parcel.writeString(imagePath);
         parcel.writeByte((byte) (notificationSet ? 1 : 0));
         parcel.writeInt(notificationJobId);
     }

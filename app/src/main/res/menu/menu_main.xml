@@ -6,4 +6,13 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_signin"
+        android:title="@string/common_signin_button_text"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_signout"
+        android:title="@string/signout"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:visible="false"/>
 </menu>

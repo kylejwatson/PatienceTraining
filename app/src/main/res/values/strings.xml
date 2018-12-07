@@ -71,5 +71,12 @@
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="signout">Log out</string>
+    <string name="signin_required">You need to sign in to use the leaderboards.</string>
+
     <!-- End of modify activity strings -->
+
+    <!--<string name="default_web_client_id">758067309304-40n7nvp69so8cuu0hobn2rq69cagc986.apps.googleusercontent.com</string>-->
 </resources>

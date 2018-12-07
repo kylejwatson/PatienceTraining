@@ -159,9 +159,10 @@ public class ModifyRewardActivity extends AppCompatActivity {
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
-        calendar.add(Calendar.HOUR, hours);
-        calendar.add(Calendar.DAY_OF_YEAR, days);
-        calendar.add(Calendar.WEEK_OF_YEAR, weeks);
+        calendar.add(Calendar.SECOND, 10);
+//        calendar.add(Calendar.HOUR, hours);
+//        calendar.add(Calendar.DAY_OF_YEAR, days);
+//        calendar.add(Calendar.WEEK_OF_YEAR, weeks);
         Date endDate = calendar.getTime();
 
         float priceFloat = 0f;

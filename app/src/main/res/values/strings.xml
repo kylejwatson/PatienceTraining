@@ -19,7 +19,7 @@
     <string name="time"><xliff:g example="5.1" id="timeQuant">%.2f</xliff:g>
         <xliff:g example="days" id="timeQual">%s</xliff:g></string>
     <!-- End of time strings -->
-    
+
     <!-- Start of click dialog unlocked strings -->
     <string name="waited_unlocked">You have waited: <xliff:g example="5 days" id="time">%s</xliff:g> to
         <xliff:g example="buy a new phone" id="rewardName">%s</xliff:g> costing
@@ -68,6 +68,8 @@
     <string name="notification_text">Your reward \'<xliff:g example="Buy a new phone" id="rewardName">%s</xliff:g>\' is ready!</string>
     <string name="channel_name">Unlocked Rewards</string>
     <string name="channel_description">Notifications will appear when a new reward is unlocked.</string>
+    <string name="title_activity_tabbed">TabbedActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- End of modify activity strings -->
 </resources>

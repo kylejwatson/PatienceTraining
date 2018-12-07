@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.kyle.patiencetraining">
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,10 +24,12 @@
         <activity
             android:name=".ModifyRewardActivity"
             android:label="@string/title_activity_add_reward"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
+
         <service
             android:name=".NotificationService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>

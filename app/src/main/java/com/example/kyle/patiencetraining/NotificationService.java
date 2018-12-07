@@ -22,7 +22,7 @@ public class NotificationService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        Long id = jobParameters.getExtras().getLong(MainActivity.REWARD_ID_BUNDLE);
+        Long id = jobParameters.getExtras().getLong(LockedFragment.REWARD_ID_BUNDLE);
         // Create an Intent for the activity you want to start
         Intent resultIntent = new Intent(this, MainActivity.class);
         resultIntent.putExtra(REWARD_ID_EXTRA,id);
@@ -34,7 +34,7 @@ public class NotificationService extends JobService {
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        String name = jobParameters.getExtras().getString(MainActivity.REWARD_NAME_BUNDLE);
+        String name = jobParameters.getExtras().getString(LockedFragment.REWARD_NAME_BUNDLE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_unlock)
                 .setContentTitle(getString(R.string.notification_title))

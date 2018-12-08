@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.kyle.patiencetraining.R;
@@ -84,8 +82,6 @@ public class LoginActivity extends AppCompatActivity {
 
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                Log.w("MainActivity", "Google sign in failed", e);
-                // ...
 
                 progressTextView.setText(R.string.goog_error);
                 setResult(RESULT_CANCELED);
@@ -96,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         // Initialize Firebase Auth
-        Log.d("MainActivity", "firebaseAuthWithGoogle:" + acct.getId());
 
         progressTextView.setText(R.string.auth_serv);
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -107,9 +102,6 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             progressTextView.setText(R.string.success);
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("MainActivity", "signInWithCredential:success");
-
-                            Log.d("mauth", mAuth.getUid());
                             Intent intent = new Intent();
                             FirebaseUser user = mAuth.getCurrentUser();
                             if(user == null){
@@ -123,7 +115,6 @@ public class LoginActivity extends AppCompatActivity {
 //                            firestoreDB(user != null ? user.getUid() : "");
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w("MainActivity", "signInWithCredential:failure", task.getException());
                             setResult(RESULT_CANCELED);
                             progressTextView.setText(R.string.serv_error);
                         }

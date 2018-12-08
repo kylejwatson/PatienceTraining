@@ -16,10 +16,15 @@ import java.util.List;
 public class UnlockedAdapter extends RecyclerView.Adapter<UnlockedViewHolder> {
     private List<Reward> mRewards;
     private UnlockedViewHolder.UnlockedClickListener mUnlockedClickListener;
+    private int clickOnBuild = -1;
 
     UnlockedAdapter(List<Reward> mRewards, UnlockedViewHolder.UnlockedClickListener mUnlockedClickListener) {
         this.mRewards = mRewards;
         this.mUnlockedClickListener = mUnlockedClickListener;
+    }
+
+    void setClickOnBuild(int clickOnBuild){
+        this.clickOnBuild = clickOnBuild;
     }
 
     @NonNull
@@ -36,6 +41,11 @@ public class UnlockedAdapter extends RecyclerView.Adapter<UnlockedViewHolder> {
     public void onBindViewHolder(@NonNull UnlockedViewHolder unlockedViewHolder, int i) {
         Reward reward = mRewards.get(i);
         unlockedViewHolder.nameTextView.setText(reward.getName());
+
+        if(clickOnBuild == i) {
+            clickOnBuild = -1;
+            unlockedViewHolder.onClick(unlockedViewHolder.itemView);
+        }
     }
 
     @Override

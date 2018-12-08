@@ -10,6 +10,7 @@ import com.example.kyle.patiencetraining.Reward.Reward;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.provider.OpenableColumns;
@@ -24,7 +25,6 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
 public class ModifyRewardActivity extends AppCompatActivity {
     /**
@@ -131,7 +131,9 @@ public class ModifyRewardActivity extends AppCompatActivity {
                 fileName.setText(getFileName(imageUri));
                 clearButton.setVisibility(View.VISIBLE);
             }
-            Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_activity_modify_reward);
+            ActionBar ab = getSupportActionBar();
+            if(ab != null)
+                ab.setTitle(R.string.title_activity_modify_reward);
         }
     }
 
@@ -185,21 +187,22 @@ public class ModifyRewardActivity extends AppCompatActivity {
     }
 
     public String getFileName(Uri uri) {
-        String result = null;
-        if (Objects.equals(uri.getScheme(), "content")) {
+        String content = "content";
+        if (content.equals(uri.getScheme())) {
             try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+
                 }
             }
         }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = Objects.requireNonNull(result).lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
+        String result = uri.getPath();
+        if(result == null)
+            return null;
+        int cut = result.lastIndexOf('/');
+        if (cut != -1)
+            result = result.substring(cut + 1);
+
         return result;
     }
 

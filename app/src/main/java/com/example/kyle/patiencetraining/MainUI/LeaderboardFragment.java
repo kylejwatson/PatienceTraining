@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +23,12 @@ public class LeaderboardFragment extends Fragment {
     private TextView error;
     private SignInButton button;
     public LeaderboardFragment() {
-        Log.d("LEADERBOARD", "Constructor");
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("LEADERBOARD", "onCreate");
     }
 
     @Override
@@ -56,13 +54,11 @@ public class LeaderboardFragment extends Fragment {
             button.setVisibility(View.VISIBLE);
         }
 
-        Log.d("LEADERBOARD", "onCreateView");
         return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.d("frag", requestCode+"");
         switch (requestCode){
             case LoginActivity.LOGIN_TASK:
                 if(resultCode == Activity.RESULT_OK){
@@ -84,7 +80,6 @@ public class LeaderboardFragment extends Fragment {
         super.onAttach(context);
         loginIntent = new Intent(context, LoginActivity.class);
         loginIntent.putExtra(LoginActivity.LOGIN_TASK_EXTRA, LoginActivity.LOGIN_TASK);
-        Log.d("LEADERBOARD", "onAttatch");
     }
 
     @Override

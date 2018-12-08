@@ -19,7 +19,7 @@ public class LockedAdapter extends RecyclerView.Adapter<LockedViewHolder> {
     private LockedViewHolder.LockedClickListener mLockedClickListener;
     private Context mContext;
 
-    public LockedAdapter(Context context, List<Reward> mRewards, LockedViewHolder.LockedClickListener mLockedClickListener) {
+    LockedAdapter(Context context, List<Reward> mRewards, LockedViewHolder.LockedClickListener mLockedClickListener) {
         this.mRewards = mRewards;
         this.mLockedClickListener = mLockedClickListener;
         mContext = context;

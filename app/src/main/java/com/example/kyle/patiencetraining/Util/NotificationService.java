@@ -12,8 +12,6 @@ import com.example.kyle.patiencetraining.Reward.LockedReward.LockedFragment;
 import com.example.kyle.patiencetraining.MainUI.MainActivity;
 import com.example.kyle.patiencetraining.R;
 
-import java.util.Objects;
-
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -33,8 +31,9 @@ public class NotificationService extends JobService {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(resultIntent);
         // Get the PendingIntent containing the entire back stack
+        int notificationId = jobParameters.getJobId();
         PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                stackBuilder.getPendingIntent(notificationId, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         String name = jobParameters.getExtras().getString(LockedFragment.REWARD_NAME_BUNDLE);
@@ -48,8 +47,6 @@ public class NotificationService extends JobService {
         createNotificationChannel();
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-
-        int notificationId = jobParameters.getJobId();
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(notificationId, mBuilder.build());
         return false;
@@ -67,7 +64,8 @@ public class NotificationService extends JobService {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
+            if(notificationManager != null)
+                notificationManager.createNotificationChannel(channel);
         }
     }
 

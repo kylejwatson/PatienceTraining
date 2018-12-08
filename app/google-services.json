@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "758067309304",
+    "firebase_url": "https://patiencetraining-528fa.firebaseio.com",
+    "project_id": "patiencetraining-528fa",
+    "storage_bucket": "patiencetraining-528fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758067309304:android:4f6f23a7db287396",
+        "android_client_info": {
+          "package_name": "com.example.kyle.patiencetraining"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758067309304-e0hnljv2pj09odqo2juc1tbl24cg3nas.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kyle.patiencetraining",
+            "certificate_hash": "bcb55bce65ea859372b1e030f759b835516bec1d"
+          }
+        },
+        {
+          "client_id": "758067309304-40n7nvp69so8cuu0hobn2rq69cagc986.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkBz9Ye-6eNSQStDvFkFHpNIN9QRAfF7s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758067309304-40n7nvp69so8cuu0hobn2rq69cagc986.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

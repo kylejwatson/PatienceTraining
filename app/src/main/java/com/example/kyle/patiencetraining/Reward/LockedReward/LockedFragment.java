@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.example.kyle.patiencetraining.Reward.RewardFragment;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -45,14 +43,14 @@ public class LockedFragment extends Fragment implements RewardFragment {
     private AlertDialog.Builder deleteWarning;
     private LockedAdapter mLockedAdapter;
     private List<Reward> mLockedRewards = new ArrayList<>();
-    private View view;
+    private JobScheduler jobScheduler;
+    private ComponentName componentName;
     private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
         @Override
         public void onPostExecute(List<Reward> list) {
             onRewardDbUpdated(list);
         }
     };
-
 
     private LockedClickedReward.OnEditListener editListener = new LockedClickedReward.OnEditListener() {
         @Override
@@ -68,53 +66,22 @@ public class LockedFragment extends Fragment implements RewardFragment {
     private void editReward(int position){
         Intent intent = new Intent(getContext(),ModifyRewardActivity.class);
         intent.putExtra(MainActivity.REWARD_EXTRA, mLockedRewards.get(position));
-        Log.d("RequestFragment", ""+MOD_REQUEST);
         startActivityForResult(intent, MOD_REQUEST);
     }
 
     private void updateUI(){
-        if(mLockedAdapter == null) {
-            mLockedAdapter = new LockedAdapter(getContext(), mLockedRewards, new LockedViewHolder.LockedClickListener() {
-                @Override
-                public void rewardOnClick(int i) {
-                    ClickedRewardDialog dialog = new LockedClickedReward(getContext(), mLockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener() {
-                        @Override
-                        public void onDelete(final int position) {
-                            deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS, listener).execute(mLockedRewards.get(position));
-                                }
-                            }).show();
-                        }
-                    },editListener);
-                    dialog.show();
-                }
-            });
-            RecyclerView lockedRecyclerView = view.findViewById(R.id.lockedRecyclerView);
-            lockedRecyclerView.setAdapter(mLockedAdapter);
-            lockedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        }
         mLockedAdapter.notifyDataSetChanged();
     }
 
-
-
     private void setNotification(Reward reward){
-        Log.d("Main Notif", "Set");
-        JobScheduler jobScheduler =
-                (JobScheduler) getContext().getSystemService(JOB_SCHEDULER_SERVICE);
         if(reward.isNotificationSet()) {
-            Log.d("Main Notif", "true");
             Date now = new Date();
             long millis = reward.getFinish() - now.getTime();
-            Log.d("Main Notif",""+millis);
-            Log.d("Main Notif", "ID: " + reward.getNotificationJobId());
             PersistableBundle bundle = new PersistableBundle();
             bundle.putString(REWARD_NAME_BUNDLE, reward.getName());
             bundle.putLong(REWARD_ID_BUNDLE, reward.getId());
             jobScheduler.schedule(new JobInfo.Builder(reward.getNotificationJobId(),
-                    new ComponentName(getContext(), NotificationService.class))
+                    componentName)
                     .setMinimumLatency(millis)
                     .setExtras(bundle)
                     .build());
@@ -145,21 +112,19 @@ public class LockedFragment extends Fragment implements RewardFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_locked, container, false);
+        View view = inflater.inflate(R.layout.fragment_locked, container, false);
+        RecyclerView lockedRecyclerView = view.findViewById(R.id.lockedRecyclerView);
+        lockedRecyclerView.setAdapter(mLockedAdapter);
+        lockedRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        view.getContext();
         return view;
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(final Context context) {
         super.onAttach(context);
 
         deleteWarning = new AlertDialog.Builder(context)
@@ -171,11 +136,28 @@ public class LockedFragment extends Fragment implements RewardFragment {
                     }
                 });
 
-        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, listener).execute();
-    }
+        mLockedAdapter = new LockedAdapter(context, mLockedRewards, new LockedViewHolder.LockedClickListener() {
+            @Override
+            public void rewardOnClick(int i) {
+                ClickedRewardDialog dialog = new LockedClickedReward(context, mLockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener() {
+                    @Override
+                    public void onDelete(final int position) {
+                        deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS, listener).execute(mLockedRewards.get(position));
+                            }
+                        }).show();
+                    }
+                },editListener);
+                dialog.show();
+            }
+        });
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        jobScheduler = (JobScheduler) context.getSystemService(JOB_SCHEDULER_SERVICE);
+
+        componentName = new ComponentName(context, NotificationService.class);
+
+        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, listener).execute();
     }
 }

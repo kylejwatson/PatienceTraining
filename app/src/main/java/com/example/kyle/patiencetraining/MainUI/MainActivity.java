@@ -27,7 +27,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,14 +68,13 @@ public class MainActivity extends AppCompatActivity{
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), 3);
+        Intent intent = getIntent();
+        long rewardId = intent.getLongExtra(NotificationService.REWARD_ID_EXTRA,-1);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), 3, rewardId);
         // Set up the ViewPager with the sections adapter.
         ViewPager mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        Log.d("MainActivity", getSupportFragmentManager().getFragments().size() + "fragments");
-        Intent intent = getIntent();
-        long rewardId = intent.getLongExtra(NotificationService.REWARD_ID_EXTRA,-1);
+
         if(rewardId != -1)
             mViewPager.setCurrentItem(1);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -100,10 +98,10 @@ public class MainActivity extends AppCompatActivity{
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if(document.getId().equals(uID))
                                     user = document.toObject(User.class);
-                                Log.d("Success", document.getId() + " => " + document.getData());
                             }
                         } else {
-                            Log.w("Unsuccess", "Error getting documents.", task.getException());
+                            //UpdateUI "Error getting documents"
+                            user = new User();
                         }
 
                         user.totalTime += 22;
@@ -134,7 +132,6 @@ public class MainActivity extends AppCompatActivity{
         for (Fragment frag:frags) {
             frag.onActivityResult(requestCode, resultCode, data);
         }
-        Log.d("Request", ""+requestCode);
         switch (requestCode){
             case ADD_REQUEST:
                 if(resultCode == RESULT_OK)

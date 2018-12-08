@@ -1,7 +1,6 @@
 package com.example.kyle.patiencetraining.Util;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.kyle.patiencetraining.R;
 

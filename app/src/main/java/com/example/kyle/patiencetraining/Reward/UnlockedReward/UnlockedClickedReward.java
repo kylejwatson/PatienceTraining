@@ -1,4 +1,4 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward.UnlockedReward;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,13 +8,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
+import com.example.kyle.patiencetraining.Reward.ClickedRewardDialog;
+import com.example.kyle.patiencetraining.R;
+import com.example.kyle.patiencetraining.Reward.Reward;
+import com.example.kyle.patiencetraining.Util.TimeString;
+
 import java.util.Date;
 
 import androidx.annotation.NonNull;
 
-public class UnlockedClickedReward extends  ClickedRewardDialog{
+class UnlockedClickedReward extends ClickedRewardDialog {
 
-    public UnlockedClickedReward(@NonNull final Context context, final Reward reward, final int position, final OnDeleteListener deleteListener){
+    UnlockedClickedReward(@NonNull final Context context, final Reward reward, final int position, final OnDeleteListener deleteListener){
         super(context, reward, position, deleteListener);
         TextView textView = findViewById(R.id.descriptionTextView);
         Button button = findViewById(R.id.collectButton);

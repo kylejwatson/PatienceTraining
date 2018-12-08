@@ -1,24 +1,28 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward.UnlockedReward;
 
-import android.app.job.JobInfo;
+import android.app.Activity;
 import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.kyle.patiencetraining.Reward.RewardAsyncTask;
+import com.example.kyle.patiencetraining.Reward.ClickedRewardDialog;
+import com.example.kyle.patiencetraining.Util.NotificationService;
+import com.example.kyle.patiencetraining.R;
+import com.example.kyle.patiencetraining.Reward.Reward;
+import com.example.kyle.patiencetraining.Reward.RewardFragment;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,12 +33,15 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
 
     private List<Reward> mUnlockedRewards = new ArrayList<>();
     private UnlockedAdapter mUnlockedAdapter;
-    public final static int TASK_GET_ALL_REWARDS = 0;
-    public final static int TASK_DELETE_REWARDS = 1;
-    private static AppDatabase sDatabase;
     private long rewardId;
     private AlertDialog.Builder deleteWarning;
     private View view;
+    private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
+        @Override
+        public void onPostExecute(List<Reward> list) {
+            onRewardDbUpdated(list);
+        }
+    };
 
     public UnlockedFragment() {
         // Required empty public constructor
@@ -48,7 +55,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
                 deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        new RewardAsyncTask(TASK_DELETE_REWARDS).execute(mUnlockedRewards.get(position));
+                        new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS, listener).execute(mUnlockedRewards.get(position));
                     }
                 }).show();
             }
@@ -56,7 +63,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
         dialog.show();
     }
 
-    public void updateUI(){
+    private void updateUI(){
         if(mUnlockedAdapter == null) {
             mUnlockedAdapter = new UnlockedAdapter(mUnlockedRewards, new UnlockedViewHolder.UnlockedClickListener() {
                 @Override
@@ -86,12 +93,12 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
         updateUI();
     }
 
-    public void setNotification(Reward reward){
-        JobScheduler jobScheduler = (JobScheduler) getActivity().getSystemService(getActivity().JOB_SCHEDULER_SERVICE);
+    private void setNotification(Reward reward){
+        JobScheduler jobScheduler = (JobScheduler) getActivity().getSystemService(Activity.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(reward.getNotificationJobId());
     }
 
-    public void assignRewardToList(Reward reward){
+    private void assignRewardToList(Reward reward){
         Date now = new Date();
         if(now.after(new Date(reward.getFinish()))) {
             mUnlockedRewards.add(reward);
@@ -110,7 +117,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_unlocked, container, false);
@@ -121,7 +128,6 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        sDatabase = AppDatabase.getInstance(context);
         Intent intent = getActivity().getIntent();
         rewardId = intent.getLongExtra(NotificationService.REWARD_ID_EXTRA,-1);
         Log.d("ID", "onCreate: " + rewardId);
@@ -134,7 +140,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
                         //Do nothing
                     }
                 });
-        new RewardAsyncTask(TASK_GET_ALL_REWARDS).execute();
+        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, listener).execute();
     }
 
     @Override
@@ -142,26 +148,4 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
         super.onDetach();
     }
 
-    public class RewardAsyncTask extends AsyncTask<Reward, Void, List<Reward>> {
-
-        private int task;
-        public RewardAsyncTask(int task){
-            this.task = task;
-        }
-        @Override
-        protected List<Reward> doInBackground(Reward... rewards) {
-            switch (task){
-                case TASK_DELETE_REWARDS:
-                    sDatabase.rewardDao().deleteRewards(rewards[0]);
-                    break;
-            }
-            return sDatabase.rewardDao().getAllRewards();
-        }
-
-        @Override
-        protected void onPostExecute(List<Reward> list) {
-            super.onPostExecute(list);
-            onRewardDbUpdated(list);
-        }
-    }
 }

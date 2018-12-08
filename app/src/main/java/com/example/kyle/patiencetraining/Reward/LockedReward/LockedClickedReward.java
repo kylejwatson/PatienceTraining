@@ -1,17 +1,22 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward.LockedReward;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.kyle.patiencetraining.Reward.ClickedRewardDialog;
+import com.example.kyle.patiencetraining.R;
+import com.example.kyle.patiencetraining.Reward.Reward;
+import com.example.kyle.patiencetraining.Util.TimeString;
+
 import java.util.Date;
 
 import androidx.annotation.NonNull;
 
-public class LockedClickedReward extends ClickedRewardDialog {
+class LockedClickedReward extends ClickedRewardDialog {
 
-    public LockedClickedReward(@NonNull Context context, Reward reward, final int position, OnDeleteListener deleteListener, final OnEditListener editListener) {
+    LockedClickedReward(@NonNull Context context, Reward reward, final int position, OnDeleteListener deleteListener, final OnEditListener editListener) {
         super(context, reward, position, deleteListener);
 
         TextView textView = findViewById(R.id.descriptionTextView);

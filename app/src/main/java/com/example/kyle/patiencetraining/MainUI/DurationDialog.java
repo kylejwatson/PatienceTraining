@@ -1,4 +1,4 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.MainUI;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,9 +8,11 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.example.kyle.patiencetraining.R;
+
 import androidx.annotation.NonNull;
 
-public class DurationDialog extends Dialog {
+class DurationDialog extends Dialog {
     private int hours;
     private int days;
     private int weeks;
@@ -22,7 +24,7 @@ public class DurationDialog extends Dialog {
     private final ImageView errorIcon;
     private final Button okButton;
 
-    public DurationDialog(@NonNull Context context, String error, final OnDurationSetListener listener) {
+    DurationDialog(@NonNull Context context, String error, final OnDurationSetListener listener) {
         super(context);
         setContentView(R.layout.dialog_duration_picker);
         errorText = findViewById(R.id.errorTextView);
@@ -111,29 +113,29 @@ public class DurationDialog extends Dialog {
 
     }
 
-    public int getHours() {
-        return hours;
-    }
+//    public int getHours() {
+//        return hours;
+//    }
 
-    public void setHours(int hours) {
+    void setHours(int hours) {
         this.hours = hours;
         hourPicker.setValue(hours);
     }
 
-    public int getDays() {
-        return days;
-    }
+//    public int getDays() {
+//        return days;
+//    }
 
-    public void setDays(int days) {
+    void setDays(int days) {
         this.days = days;
         dayPicker.setValue(days);
     }
 
-    public int getWeeks() {
-        return weeks;
-    }
+//    public int getWeeks() {
+//        return weeks;
+//    }
 
-    public void setWeeks(int weeks) {
+    void setWeeks(int weeks) {
         this.weeks = weeks;
         weekPicker.setValue(weeks);
     }

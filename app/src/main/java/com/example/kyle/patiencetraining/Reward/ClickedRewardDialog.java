@@ -1,4 +1,4 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.net.URI;
+import com.example.kyle.patiencetraining.R;
 
 import androidx.annotation.NonNull;
 

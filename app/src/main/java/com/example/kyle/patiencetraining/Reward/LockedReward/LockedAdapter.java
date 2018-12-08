@@ -1,4 +1,4 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward.LockedReward;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -6,6 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.kyle.patiencetraining.R;
+import com.example.kyle.patiencetraining.Reward.Reward;
+import com.example.kyle.patiencetraining.Util.TimeString;
 
 import java.util.Date;
 import java.util.List;

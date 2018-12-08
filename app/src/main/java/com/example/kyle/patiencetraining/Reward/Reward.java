@@ -1,22 +1,13 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward;
 
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
 
 import java.util.Date;
-import java.util.Objects;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
 @Entity(tableName = "reward")
 public class Reward implements Parcelable {
@@ -111,9 +102,9 @@ public class Reward implements Parcelable {
         return finish;
     }
 
-    public void setFinish(long finish) {
-        this.finish = finish;
-    }
+//    public void setFinish(long finish) {
+//        this.finish = finish;
+//    }
 
     public String getLink() {
         return link;

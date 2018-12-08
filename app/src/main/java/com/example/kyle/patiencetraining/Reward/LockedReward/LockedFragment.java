@@ -1,27 +1,33 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward.LockedReward;
 
-import android.app.Activity;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.kyle.patiencetraining.Reward.RewardAsyncTask;
+import com.example.kyle.patiencetraining.Reward.ClickedRewardDialog;
+import com.example.kyle.patiencetraining.MainUI.MainActivity;
+import com.example.kyle.patiencetraining.MainUI.ModifyRewardActivity;
+import com.example.kyle.patiencetraining.Util.NotificationService;
+import com.example.kyle.patiencetraining.R;
+import com.example.kyle.patiencetraining.Reward.Reward;
+import com.example.kyle.patiencetraining.Reward.RewardFragment;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,19 +38,20 @@ import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
 public class LockedFragment extends Fragment implements RewardFragment {
 
-
-    public final static int TASK_GET_ALL_REWARDS = 0;
-    public final static int TASK_DELETE_REWARDS = 1;
-
     public static final String REWARD_NAME_BUNDLE = "RewardName";
     public static final String REWARD_ID_BUNDLE = "RewardID";
 
     public static final int MOD_REQUEST = 1;
-    private static AppDatabase sDatabase;
     private AlertDialog.Builder deleteWarning;
     private LockedAdapter mLockedAdapter;
     private List<Reward> mLockedRewards = new ArrayList<>();
     private View view;
+    private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
+        @Override
+        public void onPostExecute(List<Reward> list) {
+            onRewardDbUpdated(list);
+        }
+    };
 
 
     private LockedClickedReward.OnEditListener editListener = new LockedClickedReward.OnEditListener() {
@@ -58,14 +65,14 @@ public class LockedFragment extends Fragment implements RewardFragment {
         // Required empty public constructor
     }
 
-    public void editReward(int position){
+    private void editReward(int position){
         Intent intent = new Intent(getContext(),ModifyRewardActivity.class);
         intent.putExtra(MainActivity.REWARD_EXTRA, mLockedRewards.get(position));
         Log.d("RequestFragment", ""+MOD_REQUEST);
-        getActivity().startActivityForResult(intent, MOD_REQUEST);
+        startActivityForResult(intent, MOD_REQUEST);
     }
 
-    public void updateUI(){
+    private void updateUI(){
         if(mLockedAdapter == null) {
             mLockedAdapter = new LockedAdapter(getContext(), mLockedRewards, new LockedViewHolder.LockedClickListener() {
                 @Override
@@ -76,7 +83,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
                             deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    new RewardAsyncTask(TASK_DELETE_REWARDS).execute(mLockedRewards.get(position));
+                                    new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS, listener).execute(mLockedRewards.get(position));
                                 }
                             }).show();
                         }
@@ -93,7 +100,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
 
 
 
-    public void setNotification(Reward reward){
+    private void setNotification(Reward reward){
         Log.d("Main Notif", "Set");
         JobScheduler jobScheduler =
                 (JobScheduler) getContext().getSystemService(JOB_SCHEDULER_SERVICE);
@@ -116,7 +123,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
         }
     }
 
-    public void assignRewardToList(Reward reward){
+    private void assignRewardToList(Reward reward){
         Date now = new Date();
         if(now.before(new Date(reward.getFinish()))) {
             mLockedRewards.add(reward);
@@ -144,7 +151,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_locked, container, false);
@@ -154,7 +161,6 @@ public class LockedFragment extends Fragment implements RewardFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        sDatabase = AppDatabase.getInstance(context);
 
         deleteWarning = new AlertDialog.Builder(context)
                 .setTitle(R.string.delete_confirmation).setCancelable(true).setIcon(R.drawable.ic_warning)
@@ -165,34 +171,11 @@ public class LockedFragment extends Fragment implements RewardFragment {
                     }
                 });
 
-        new RewardAsyncTask(TASK_GET_ALL_REWARDS).execute();
+        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, listener).execute();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    public class RewardAsyncTask extends AsyncTask<Reward, Void, List<Reward>> {
-
-        private int task;
-        public RewardAsyncTask(int task){
-            this.task = task;
-        }
-        @Override
-        protected List<Reward> doInBackground(Reward... rewards) {
-            switch (task){
-                case TASK_DELETE_REWARDS:
-                    sDatabase.rewardDao().deleteRewards(rewards[0]);
-                    break;
-            }
-            return sDatabase.rewardDao().getAllRewards();
-        }
-
-        @Override
-        protected void onPostExecute(List<Reward> list) {
-            super.onPostExecute(list);
-            onRewardDbUpdated(list);
-        }
     }
 }

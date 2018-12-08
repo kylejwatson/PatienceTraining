@@ -1,4 +1,4 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Util;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,7 +7,10 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
+
+import com.example.kyle.patiencetraining.Reward.LockedReward.LockedFragment;
+import com.example.kyle.patiencetraining.MainUI.MainActivity;
+import com.example.kyle.patiencetraining.R;
 
 import java.util.Objects;
 

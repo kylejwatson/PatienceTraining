@@ -1,15 +1,17 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward.UnlockedReward;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-public class UnlockedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public final TextView nameTextView;
-    public final UnlockedClickListener unlockedClickListener;
+import com.example.kyle.patiencetraining.R;
 
-    public UnlockedViewHolder(@NonNull View itemView, UnlockedClickListener unlockedClickListener) {
+public class UnlockedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    final TextView nameTextView;
+    private final UnlockedClickListener unlockedClickListener;
+
+    UnlockedViewHolder(@NonNull View itemView, UnlockedClickListener unlockedClickListener) {
         super(itemView);
         nameTextView = itemView.findViewById(R.id.nameUCellTextView);
         this.unlockedClickListener = unlockedClickListener;

@@ -1,6 +1,9 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Util;
 
 import android.content.Context;
+
+import com.example.kyle.patiencetraining.Reward.Reward;
+import com.example.kyle.patiencetraining.Reward.RewardDao;
 
 import androidx.room.Database;
 import androidx.room.Room;

@@ -1,7 +1,7 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.MainUI;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.kyle.patiencetraining.Reward.LockedReward.LockedFragment;
+import com.example.kyle.patiencetraining.Reward.UnlockedReward.UnlockedFragment;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -9,15 +9,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
-    int mNumOfTabs;
-    public RewardFragment lockedFragment;
-    public RewardFragment unlockedFragment;
+    private int mNumOfTabs;
 
-    public SectionsPagerAdapter(FragmentManager fm, int NumOfTabs) {
+    SectionsPagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
-        lockedFragment = new LockedFragment();
-        unlockedFragment = new UnlockedFragment();
     }
 
     @Override
@@ -29,7 +25,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new UnlockedFragment();
             case 2:
-                //leaderboard fragment
+                return new LeaderboardFragment();
             default:
                 return null;
         }

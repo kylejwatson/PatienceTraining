@@ -1,16 +1,18 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward.LockedReward;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-public class LockedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    public final TextView nameTextView;
-    public final TextView timeTextView;
-    public final LockedClickListener lockedClickListener;
+import com.example.kyle.patiencetraining.R;
 
-    public LockedViewHolder(@NonNull View itemView, LockedClickListener lockedClickListener) {
+public class LockedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    final TextView nameTextView;
+    final TextView timeTextView;
+    private final LockedClickListener lockedClickListener;
+
+    LockedViewHolder(@NonNull View itemView, LockedClickListener lockedClickListener) {
         super(itemView);
         nameTextView = itemView.findViewById(R.id.nameCellTextView);
         timeTextView = itemView.findViewById(R.id.timeCellTextView);

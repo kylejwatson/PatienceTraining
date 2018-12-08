@@ -1,4 +1,4 @@
-package com.example.kyle.patiencetraining;
+package com.example.kyle.patiencetraining.Reward.UnlockedReward;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -8,13 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.kyle.patiencetraining.R;
+import com.example.kyle.patiencetraining.Reward.Reward;
+
 import java.util.List;
 
 public class UnlockedAdapter extends RecyclerView.Adapter<UnlockedViewHolder> {
     private List<Reward> mRewards;
     private UnlockedViewHolder.UnlockedClickListener mUnlockedClickListener;
 
-    public UnlockedAdapter(List<Reward> mRewards, UnlockedViewHolder.UnlockedClickListener mUnlockedClickListener) {
+    UnlockedAdapter(List<Reward> mRewards, UnlockedViewHolder.UnlockedClickListener mUnlockedClickListener) {
         this.mRewards = mRewards;
         this.mUnlockedClickListener = mUnlockedClickListener;
     }

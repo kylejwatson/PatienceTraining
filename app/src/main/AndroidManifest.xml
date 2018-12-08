@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".MainActivity"
+            android:name=".MainUI.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,14 +22,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ModifyRewardActivity"
+            android:name=".MainUI.ModifyRewardActivity"
             android:label="@string/title_activity_add_reward"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainUI.MainActivity" />
 
         <service
-            android:name=".NotificationService"
+            android:name=".Util.NotificationService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <activity android:name=".MainUI.LoginActivity"></activity>
     </application>
 
 </manifest>

@@ -22,6 +22,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity{
      *
      * Todo: update adapter to show hours,days,weeks?
      * Todo: show 'no rewards added' page if empty
-     * Todo: pass arguments to fragments
+     * Todo: pass action bar arguments to fragments
      *
      * Todo: make settings menu get all options needed
      * Todo: Make activities/layouts for each option
@@ -49,7 +50,9 @@ public class MainActivity extends AppCompatActivity{
 
     private static final int ADD_REQUEST = 0;
     public static final String REWARD_EXTRA = "PatienceTrainingReward";
+    private static final int[] ACTIONBAR_TITLES = {R.string.locked_title,R.string.unlocked_title, R.string.leaderboard_title};
     private User user;
+
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -74,7 +77,24 @@ public class MainActivity extends AppCompatActivity{
         // Set up the ViewPager with the sections adapter.
         ViewPager mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ActionBar ab = getSupportActionBar();
+                if(ab != null)
+                    ab.setTitle(ACTIONBAR_TITLES[position]);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         if(rewardId != -1)
             mViewPager.setCurrentItem(1);
         FloatingActionButton fab = findViewById(R.id.fab);

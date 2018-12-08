@@ -1,6 +1,9 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Patience Training</string>
     <string name="action_settings">Settings</string>
+    <string name="locked_title">Locked Rewards</string>
+    <string name="unlocked_title">Unlocked Rewards</string>
+    <string name="leaderboard_title">Leaderboard</string>
 
     <!-- Start of time strings -->
     <string name="countdown">

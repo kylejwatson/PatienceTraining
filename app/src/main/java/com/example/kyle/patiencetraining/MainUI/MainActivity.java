@@ -17,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,7 +38,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity{
 
     /**
-     * Todo: make leaderboard layout
+     * Todo: make rank server-side functions
      *
      * Todo: update adapter to show hours,days,weeks?
      * Todo: show 'no rewards added' page if empty
@@ -108,14 +109,33 @@ public class MainActivity extends AppCompatActivity{
 
     private void firestoreDB(final String uID){
         // Access a Cloud Firestore instance from your Activity
+
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(uID).get().addOnCompleteListener(
+                new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            user = task.getResult().toObject(User.class);
+                            if(user != null) {
+                                user.totalTime += 22;
+                                db.collection("users").document(uID)
+                                        .set(user);
+                            }
+                        }
+                    }
+                }
+
+        );
         db.collection("users")
+                .orderBy("totalTime")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                User tempUser = document.toObject(User.class);
                                 if(document.getId().equals(uID))
                                     user = document.toObject(User.class);
                             }
@@ -123,10 +143,6 @@ public class MainActivity extends AppCompatActivity{
                             //UpdateUI "Error getting documents"
                             user = new User();
                         }
-
-                        user.totalTime += 22;
-                        db.collection("users").document(uID)
-                                .set(user);
                     }
                 });
 

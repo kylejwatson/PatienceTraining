@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/user_score" />
 
-    <view
+    <View
         android:id="@+id/vertLine"
         android:layout_width="1dp"
         android:layout_height="0dp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="@id/userNameTextView" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/circleImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/userNameTextView"

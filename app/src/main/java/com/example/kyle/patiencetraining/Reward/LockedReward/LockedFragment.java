@@ -136,7 +136,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
                     }
                 });
 
-        mLockedAdapter = new LockedAdapter(context, mLockedRewards, new LockedViewHolder.LockedClickListener() {
+        mLockedAdapter = new LockedAdapter(mLockedRewards, new LockedViewHolder.LockedClickListener() {
             @Override
             public void rewardOnClick(int i) {
                 ClickedRewardDialog dialog = new LockedClickedReward(context, mLockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener() {

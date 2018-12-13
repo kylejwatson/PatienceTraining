@@ -2,6 +2,7 @@ package com.example.kyle.patiencetraining.MainUI;
 
 import android.os.Bundle;
 
+import com.example.kyle.patiencetraining.Leaderboard.LeaderboardFragment;
 import com.example.kyle.patiencetraining.Reward.LockedReward.LockedFragment;
 import com.example.kyle.patiencetraining.Reward.UnlockedReward.UnlockedFragment;
 

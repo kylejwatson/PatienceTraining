@@ -26,10 +26,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 3;
-    static final String UID_EXTRA = "uid_string";
-    static final String LOGIN_TASK_EXTRA = "login_task";
-    static final int LOGIN_TASK = 66;
-    static final int LOGOUT_TASK = 77;
+    public static final String UID_EXTRA = "uid_string";
+    public static final String LOGIN_TASK_EXTRA = "login_task";
+    public static final int LOGIN_TASK = 66;
+    public static final int LOGOUT_TASK = 77;
     private GoogleSignInOptions gso;
     private TextView progressTextView;
 

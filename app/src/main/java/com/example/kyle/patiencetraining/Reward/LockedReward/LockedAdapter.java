@@ -19,17 +19,16 @@ public class LockedAdapter extends RecyclerView.Adapter<LockedViewHolder> {
     private LockedViewHolder.LockedClickListener mLockedClickListener;
     private Context mContext;
 
-    LockedAdapter(Context context, List<Reward> mRewards, LockedViewHolder.LockedClickListener mLockedClickListener) {
+    LockedAdapter(List<Reward> mRewards, LockedViewHolder.LockedClickListener mLockedClickListener) {
         this.mRewards = mRewards;
         this.mLockedClickListener = mLockedClickListener;
-        mContext = context;
     }
 
     @NonNull
     @Override
     public LockedViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        Context context = viewGroup.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        mContext = viewGroup.getContext();
+        LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.locked_grid_cell, viewGroup, false);
 
         return new LockedViewHolder(view,mLockedClickListener);

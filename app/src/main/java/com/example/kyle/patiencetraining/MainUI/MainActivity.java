@@ -9,20 +9,10 @@ import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.Reward.Reward;
 import com.example.kyle.patiencetraining.Reward.RewardAsyncTask;
 import com.example.kyle.patiencetraining.Util.NotificationService;
-import com.example.kyle.patiencetraining.Util.User;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -38,7 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity{
 
     /**
-     * Todo: make rank server-side functions
+     *
      *
      * Todo: update adapter to show hours,days,weeks?
      * Todo: show 'no rewards added' page if empty
@@ -52,8 +42,6 @@ public class MainActivity extends AppCompatActivity{
     private static final int ADD_REQUEST = 0;
     public static final String REWARD_EXTRA = "PatienceTrainingReward";
     private static final int[] ACTIONBAR_TITLES = {R.string.locked_title,R.string.unlocked_title, R.string.leaderboard_title};
-    private User user;
-
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -107,47 +95,6 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    private void firestoreDB(final String uID){
-        // Access a Cloud Firestore instance from your Activity
-
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(uID).get().addOnCompleteListener(
-                new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            user = task.getResult().toObject(User.class);
-                            if(user != null) {
-                                user.totalTime += 22;
-                                db.collection("users").document(uID)
-                                        .set(user);
-                            }
-                        }
-                    }
-                }
-
-        );
-        db.collection("users")
-                .orderBy("totalTime")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                User tempUser = document.toObject(User.class);
-                                if(document.getId().equals(uID))
-                                    user = document.toObject(User.class);
-                            }
-                        } else {
-                            //UpdateUI "Error getting documents"
-                            user = new User();
-                        }
-                    }
-                });
-
-    }
-
     private void signOut(){
         Intent signInIntent = new Intent(this, LoginActivity.class);
         signInIntent.putExtra(LoginActivity.LOGIN_TASK_EXTRA, LoginActivity.LOGOUT_TASK);
@@ -179,8 +126,8 @@ public class MainActivity extends AppCompatActivity{
                 break;
             case LoginActivity.LOGIN_TASK:
                 if(resultCode == Activity.RESULT_OK){
-                    String uID = data.getStringExtra(LoginActivity.UID_EXTRA);
-                    firestoreDB(uID);
+//                    String uID = data.getStringExtra(LoginActivity.UID_EXTRA);
+//                    firestoreDB(uID);
                     menu.findItem(R.id.action_signout).setVisible(true);
                     menu.findItem(R.id.action_signin).setVisible(false);
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.mainLayout), R.string.success, Snackbar.LENGTH_LONG);

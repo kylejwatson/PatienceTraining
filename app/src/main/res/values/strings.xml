@@ -97,9 +97,9 @@
     <string name="signin_required">You need to sign in to use the leaderboards.</string>
     <string name="user_score">#<xliff:g example="32" id="position">%d</xliff:g> -
         <xliff:g example="kylewatson98@gmail.com" id="username">%s</xliff:g> -
-        <xliff:g example="5.23 days" id="totalTime">%s</xliff:g> waited</string>
+        <xliff:g example="5.23 days" id="totalTime">%d</xliff:g> waited</string>
     <string name="your_score">#<xliff:g example="103" id="position">%d</xliff:g> -
-        You! - <xliff:g example="58.23 months" id="totalTime">%s</xliff:g></string>
+        You! - <xliff:g example="58.23 months" id="totalTime">%d</xliff:g></string>
 
     <!-- End of leaderboard strings -->
 </resources>

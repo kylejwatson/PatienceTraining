@@ -26,4 +26,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clockImageView"
         tools:listitem="@layout/locked_grid_cell"/>
+
+    <TextView
+        android:id="@+id/emptyLockedTextView"
+        android:visibility="invisible"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/empty_locked"
+        app:layout_constraintBottom_toBottomOf="@id/lockedRecyclerView"
+        app:layout_constraintEnd_toEndOf="@id/lockedRecyclerView"
+        app:layout_constraintStart_toStartOf="@id/lockedRecyclerView"
+        app:layout_constraintTop_toTopOf="@id/lockedRecyclerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

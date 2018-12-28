@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.kyle.patiencetraining.MainUI.SectionsPagerAdapter;
 import com.example.kyle.patiencetraining.Reward.RewardAsyncTask;
@@ -38,6 +39,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
     private AlertDialog.Builder deleteWarning;
     private JobScheduler jobScheduler;
     private LinearLayoutManager linearLayoutManager;
+    private TextView emptyTextView;
     private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
         @Override
         public void onPostExecute(List<Reward> list) {
@@ -57,6 +59,11 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
                 linearLayoutManager.scrollToPosition(i);
                 rewardId = -1;
             }
+        }
+        if(mUnlockedRewards.isEmpty()){
+            emptyTextView.setVisibility(View.VISIBLE);
+        }else{
+            emptyTextView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -102,6 +109,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
         unlockedRecyclerView.setAdapter(mUnlockedAdapter);
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         unlockedRecyclerView.setLayoutManager(linearLayoutManager);
+        emptyTextView = view.findViewById(R.id.emptyUnlockedTextView);
         return view;
     }
 

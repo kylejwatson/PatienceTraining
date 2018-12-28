@@ -11,6 +11,7 @@ import android.os.PersistableBundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.kyle.patiencetraining.Reward.RewardAsyncTask;
 import com.example.kyle.patiencetraining.Reward.ClickedRewardDialog;
@@ -36,6 +37,10 @@ import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
 public class LockedFragment extends Fragment implements RewardFragment {
 
+    /**
+     * Todo: change rewardDAO so that theres two functions, one to get rewards that havent finished and one that have so list sorting isn't needed.
+     */
+
     public static final String REWARD_NAME_BUNDLE = "RewardName";
     public static final String REWARD_ID_BUNDLE = "RewardID";
 
@@ -45,6 +50,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
     private List<Reward> mLockedRewards = new ArrayList<>();
     private JobScheduler jobScheduler;
     private ComponentName componentName;
+    private TextView emptyTextView;
     private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
         @Override
         public void onPostExecute(List<Reward> list) {
@@ -71,6 +77,12 @@ public class LockedFragment extends Fragment implements RewardFragment {
 
     private void updateUI(){
         mLockedAdapter.notifyDataSetChanged();
+
+        if(mLockedRewards.isEmpty()){
+            emptyTextView.setVisibility(View.VISIBLE);
+        }else{
+            emptyTextView.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setNotification(Reward reward){
@@ -119,7 +131,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
         RecyclerView lockedRecyclerView = view.findViewById(R.id.lockedRecyclerView);
         lockedRecyclerView.setAdapter(mLockedAdapter);
         lockedRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        view.getContext();
+        emptyTextView = view.findViewById(R.id.emptyLockedTextView);
         return view;
     }
 

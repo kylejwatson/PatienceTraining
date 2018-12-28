@@ -149,7 +149,8 @@ public class LeaderboardFragment extends Fragment {
 
                             new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_UPDATE_SCORE).execute(scoreList);
                             yourScore.setVisibility(View.VISIBLE);
-                            yourScore.setText(getString(R.string.user_score,user.rank,user.userName,user.totalTime));
+                            if(getContext() != null)
+                                yourScore.setText(getString(R.string.user_score,user.rank,user.userName,user.totalTime));
                             getOtherUsers();
                         }
                     }

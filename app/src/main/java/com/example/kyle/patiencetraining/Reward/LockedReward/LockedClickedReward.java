@@ -23,8 +23,8 @@ class LockedClickedReward extends ClickedRewardDialog {
         Button button = findViewById(R.id.collectButton);
         Date start = new Date(reward.getStart());
         Date finish = new Date(reward.getStart());
-        String totalTime = TimeString.getTimeString(start, finish, context);
-        String time = TimeString.getTimeString(start, new Date(), context);
+        String totalTime = TimeString.getTimeStringBetween(start, finish, context);
+        String time = TimeString.getTimeStringBetween(start, new Date(), context);
         String description = context.getString(R.string.waited_locked, time, totalTime, reward.getName());
         button.setText(R.string.wait_button);
         button.setEnabled(false);

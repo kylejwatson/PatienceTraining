@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.kyle.patiencetraining.R;
+import com.example.kyle.patiencetraining.Util.TimeString;
 import com.example.kyle.patiencetraining.Util.User;
 
 import java.util.List;
@@ -37,7 +38,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardViewHold
     @Override
     public void onBindViewHolder(@NonNull LeaderboardViewHolder holder, int position) {
         User user = mUsers.get(position);
-        holder.userNameTextView.setText(context.getString(R.string.user_score,user.rank,user.userName,user.totalTime));
+        String timeString = TimeString.getTimeFromLong(user.totalTime, context);
+        holder.userNameTextView.setText(context.getString(R.string.user_score,user.rank,user.userName,timeString));
     }
 
     @Override

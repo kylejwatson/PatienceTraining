@@ -10,20 +10,36 @@ import org.joda.time.Hours;
 import org.joda.time.Months;
 import org.joda.time.Weeks;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public abstract class TimeString {
-    public static String getTimeString(Date fromDate, Date toDate, Context context){
+
+    public static String getTimeFromLong(long time, Context context){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(0);
+        Date startDate = calendar.getTime();
+        calendar.setTimeInMillis(time);
+        Date endDate = calendar.getTime();
+        return getTimeStringBetween(startDate, endDate, context);
+    }
+    public static String getTimeStringBetween(Date fromDate, Date toDate, Context context){
 
         DateTime fromDateTime = new DateTime(fromDate);
         DateTime toDateTime = new DateTime(toDate);
 
 
-        int months = Months.monthsBetween(fromDateTime, toDateTime).getMonths();
-        int years = months/12;
-        int weeks = Weeks.weeksBetween(fromDateTime, toDateTime).getWeeks();
-        int days = Days.daysBetween(fromDateTime, toDateTime).getDays();
-        int hours = Hours.hoursBetween(fromDateTime, toDateTime).getHours();
+        long months = Months.monthsBetween(fromDateTime, toDateTime).getMonths();
+        long years = months/12;
+        int weeks = 0;
+        int days = 0;
+        int hours = 0;
+
+        if(months == 0) {
+            weeks = Weeks.weeksBetween(fromDateTime, toDateTime).getWeeks();
+            days = Days.daysBetween(fromDateTime, toDateTime).getDays();
+            hours = Hours.hoursBetween(fromDateTime, toDateTime).getHours();
+        }
 
         float quantifier;
         int qualifier;

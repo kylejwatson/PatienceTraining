@@ -21,6 +21,7 @@ import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.Util.AppDatabase;
 import com.example.kyle.patiencetraining.Util.Score;
 import com.example.kyle.patiencetraining.Util.ScoreAsyncTask;
+import com.example.kyle.patiencetraining.Util.TimeString;
 import com.example.kyle.patiencetraining.Util.User;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -107,7 +108,8 @@ public class LeaderboardFragment extends Fragment {
                             mUsers.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 User tempUser = document.toObject(User.class);
-                                tempUser.userName = document.getId();
+                                if(tempUser.userName == null)
+                                    tempUser.userName = document.getId();
                                 mUsers.add(tempUser);
                             }
                             recyclerView.setVisibility(View.VISIBLE);
@@ -149,8 +151,10 @@ public class LeaderboardFragment extends Fragment {
 
                             new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_UPDATE_SCORE).execute(scoreList);
                             yourScore.setVisibility(View.VISIBLE);
-                            if(getContext() != null)
-                                yourScore.setText(getString(R.string.user_score,user.rank,user.userName,user.totalTime));
+                            if(getContext() != null) {
+                                String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
+                                yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
+                            }
                             getOtherUsers();
                         }
                     }

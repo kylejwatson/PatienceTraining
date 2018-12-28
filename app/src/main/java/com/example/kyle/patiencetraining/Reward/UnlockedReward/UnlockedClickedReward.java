@@ -23,7 +23,7 @@ class UnlockedClickedReward extends ClickedRewardDialog {
         super(context, reward, position, deleteListener);
         TextView textView = findViewById(R.id.descriptionTextView);
         Button button = findViewById(R.id.collectButton);
-        String time = TimeString.getTimeString(new Date(reward.getStart()), new Date(reward.getFinish()),context);
+        String time = TimeString.getTimeStringBetween(new Date(reward.getStart()), new Date(reward.getFinish()),context);
         String description = context.getString(R.string.waited_unlocked, time, reward.getName(), reward.getPrice());
         textView.setText(description);
         button.setText(R.string.collect_button);

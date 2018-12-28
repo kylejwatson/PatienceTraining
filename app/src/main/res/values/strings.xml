@@ -102,4 +102,9 @@
         You! - <xliff:g example="58.23 months" id="totalTime">%d</xliff:g></string>
 
     <!-- End of leaderboard strings -->
+
+    <!-- Start of empty strings -->
+    <string name="empty_unlocked">It appears you have not unlocked any rewards yet. When rewards set reach the date they will be put here and the time will be added to your score.</string>
+    <string name="empty_locked">It appears you have not added any rewards yet. Use the add button at the bottom of the screen to add a new reward.</string>
+    <!-- End of empty strings -->
 </resources>

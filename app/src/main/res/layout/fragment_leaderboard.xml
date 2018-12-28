@@ -30,7 +30,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:visibility="gone"
+        android:visibility="invisible"
         style="@style/TextAppearance.MaterialComponents.Headline4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,10 +42,22 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="8dp"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/yourScore"
         tools:listitem="@layout/leader_grid_cell" />
+
+    <ProgressBar
+        android:id="@+id/leaderProgressBar"
+        style="@android:style/Widget.Material.ProgressBar.Large"
+        android:visibility="invisible"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/leaderRecyclerView"
+        app:layout_constraintEnd_toEndOf="@id/leaderRecyclerView"
+        app:layout_constraintStart_toStartOf="@id/leaderRecyclerView"
+        app:layout_constraintTop_toTopOf="@id/leaderRecyclerView"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

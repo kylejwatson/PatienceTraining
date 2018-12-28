@@ -13,10 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.kyle.patiencetraining.MainUI.LoginActivity;
 import com.example.kyle.patiencetraining.R;
+import com.example.kyle.patiencetraining.Util.AppDatabase;
+import com.example.kyle.patiencetraining.Util.Score;
+import com.example.kyle.patiencetraining.Util.ScoreAsyncTask;
 import com.example.kyle.patiencetraining.Util.User;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,8 +38,6 @@ import java.util.List;
 public class LeaderboardFragment extends Fragment {
 
     /**
-     * Todo: add loading animation for loading database
-     * Todo: add time to totalTime in database when things are unlocked
      * Todo: figure out what range I want to load from the leaderboard I think 20-50 around the users rank
      */
 
@@ -47,6 +49,7 @@ public class LeaderboardFragment extends Fragment {
     private TextView yourScore;
     private User user;
     private List<User> mUsers = new ArrayList<>();
+    private ProgressBar progressBar;
 
     public LeaderboardFragment() {
 
@@ -68,6 +71,8 @@ public class LeaderboardFragment extends Fragment {
         adapter = new LeaderboardAdapter(mUsers);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
+
+        progressBar = view.findViewById(R.id.leaderProgressBar);
 
         error = view.findViewById(R.id.signInError);
         button = view.findViewById(R.id.sign_in_button);
@@ -106,6 +111,7 @@ public class LeaderboardFragment extends Fragment {
                                 mUsers.add(tempUser);
                             }
                             recyclerView.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
                             adapter.notifyDataSetChanged();
                         } else {
                             //UpdateUI "Error getting documents"
@@ -115,21 +121,45 @@ public class LeaderboardFragment extends Fragment {
     }
 
     private void createUser(final String uID){
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         user = new User();
         user.userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         user.totalTime = 0;
-        db.collection("users").document(uID).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        addScore(uID);
+    }
+
+    private void addScore(final String uID){
+        new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_GET_ALL_SCORES, new ScoreAsyncTask.OnPostExecuteListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                yourScore.setVisibility(View.VISIBLE);
-                yourScore.setText(getString(R.string.user_score,user.rank,user.userName,user.totalTime));
-                getOtherUsers();
+            public void onPostExecute(final List<Score> list) {
+                long millis = 0;
+                for (Score score:list) {
+                    millis += score.getTime();
+                }
+                user.totalTime += millis;
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("users").document(uID).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Score[] scoreList = new Score[list.size()];
+                            for (int i = 0; i < scoreList.length; i++) {
+                                scoreList[i] = list.get(i);
+                                scoreList[i].setUploaded(1);
+                            }
+
+                            new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_UPDATE_SCORE).execute(scoreList);
+                            yourScore.setVisibility(View.VISIBLE);
+                            yourScore.setText(getString(R.string.user_score,user.rank,user.userName,user.totalTime));
+                            getOtherUsers();
+                        }
+                    }
+                });
             }
-        });
+        }).execute();
     }
 
     private void getCurrentUser(final String uID){
+        progressBar.setVisibility(View.VISIBLE);
         // Access a Cloud Firestore instance from your Activity
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -137,13 +167,10 @@ public class LeaderboardFragment extends Fragment {
                 new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        User user;
                         if (task.isSuccessful() && task.getResult() != null) {
                             user = task.getResult().toObject(User.class);
                             if(user != null) {
-                                yourScore.setVisibility(View.VISIBLE);
-                                yourScore.setText(getString(R.string.user_score,user.rank,user.userName,user.totalTime));
-                                getOtherUsers();
+                                addScore(uID);
                             }else{
                                 createUser(uID);
                             }
@@ -170,8 +197,8 @@ public class LeaderboardFragment extends Fragment {
                 if(resultCode == Activity.RESULT_OK){
                     error.setVisibility(View.VISIBLE);
                     button.setVisibility(View.VISIBLE);
-                    yourScore.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);
+                    yourScore.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);
                 }
                 break;
         }

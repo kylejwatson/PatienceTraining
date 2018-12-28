@@ -15,8 +15,11 @@ import com.example.kyle.patiencetraining.Reward.ClickedRewardDialog;
 import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.Reward.Reward;
 import com.example.kyle.patiencetraining.Reward.RewardFragment;
+import com.example.kyle.patiencetraining.Util.Score;
+import com.example.kyle.patiencetraining.Util.ScoreAsyncTask;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +66,12 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
         for (Reward reward : rewardList) {
             assignRewardToList(reward);
         }
+        Score[] scores = new Score[mUnlockedRewards.size()];
+        for (int i = 0; i < scores.length; i++) {
+            long millis = mUnlockedRewards.get(i).getFinish() - mUnlockedRewards.get(i).getStart();
+            scores[i] = new Score(mUnlockedRewards.get(i).getId(), millis, 0);
+        }
+        new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_INSERT_SCORE).execute(scores);
         updateUI();
     }
 

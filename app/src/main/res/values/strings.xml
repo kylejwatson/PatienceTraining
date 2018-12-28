@@ -13,6 +13,7 @@
     </string>
 
     <string name="duration_title">Set a duration</string>
+    <string name="second">Seconds</string>
     <string name="hour">Hours</string>
     <string name="day">Days</string>
     <string name="week">Weeks</string>

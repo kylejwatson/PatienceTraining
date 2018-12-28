@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity{
      *
      *
      * Todo: update adapter to show hours,days,weeks?
-     * Todo: show 'no rewards added' page if empty
      * Todo: pass action bar arguments to fragments
      *
      * Todo: make settings menu get all options needed

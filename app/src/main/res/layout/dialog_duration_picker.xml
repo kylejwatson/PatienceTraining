@@ -5,7 +5,27 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-   
+
+
+    <TextView
+        android:id="@+id/secondLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/second"
+        app:layout_constraintEnd_toEndOf="@+id/secondPicker"
+        app:layout_constraintStart_toStartOf="@+id/secondPicker"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <NumberPicker
+        android:id="@+id/secondPicker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/hourPicker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/secondLabel" />
 
     <TextView
         android:id="@+id/hourLabel"
@@ -24,7 +44,7 @@
         android:layout_margin="8dp"
 
         app:layout_constraintEnd_toStartOf="@+id/dayPicker"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/secondPicker"
         app:layout_constraintTop_toBottomOf="@+id/hourLabel" />
 
     <TextView

@@ -16,9 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardViewHolder> {
-    /**
-     * Todo: convert the long time into a timestring
-     */
 
     private List<User> mUsers;
     private Context context;

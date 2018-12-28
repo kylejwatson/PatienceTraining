@@ -19,6 +19,12 @@ class DurationDialog extends Dialog {
     private final NumberPicker hourPicker;
     private final NumberPicker dayPicker;
     private final NumberPicker weekPicker;
+
+    /**
+     * Todo: remove second picker when not debugging
+     */
+    private final NumberPicker secondPicker;
+    private int seconds;
     private final String error;
     private final  TextView errorText;
     private final ImageView errorIcon;
@@ -38,6 +44,18 @@ class DurationDialog extends Dialog {
         dayPicker.setMaxValue(6);
         weekPicker = findViewById(R.id.weekPicker);
         weekPicker.setMaxValue(100);
+
+        secondPicker = findViewById(R.id.secondPicker);
+        secondPicker.setVisibility(View.VISIBLE);
+        secondPicker.setMaxValue(60);
+        secondPicker.setValue(1);
+        secondPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                seconds = i1;
+                checkError();
+            }
+        });
 
         hourPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -85,14 +103,14 @@ class DurationDialog extends Dialog {
                 hours = hourPicker.getValue();
                 days = dayPicker.getValue();
                 weeks = weekPicker.getValue();
-                listener.onDurationSet(hours, days, weeks);
+                listener.onDurationSet(hours, days, weeks, seconds);
                 dismiss();
             }
         });
     }
 
     private void checkError(){
-        if(hours+days+weeks == 0){
+        if(hours+days+weeks+seconds == 0){
             setError(error);
         }else{
             setError(null);
@@ -141,6 +159,6 @@ class DurationDialog extends Dialog {
     }
 
     public interface OnDurationSetListener{
-        void onDurationSet(int hours, int days, int weeks);
+        void onDurationSet(int hours, int days, int weeks, int seconds);
     }
 }

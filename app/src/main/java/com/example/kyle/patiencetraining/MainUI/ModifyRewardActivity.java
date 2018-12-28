@@ -27,15 +27,12 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ModifyRewardActivity extends AppCompatActivity {
-    /**
-     * Todo: allow editing of seconds just for demoing/testing
-     *
-     */
     private Uri imageUri;
     private static final int GET_FROM_GALLERY = 0;
     private int hours = 1;
     private int days;
     private int weeks;
+    private int seconds;
     private TextView fileName;
     private ImageButton clearButton;
     private Reward oldReward;
@@ -74,10 +71,11 @@ public class ModifyRewardActivity extends AppCompatActivity {
 
         final DurationDialog dialog = new DurationDialog(this, getString(R.string.missing_input,getString(R.string.missing_duration)), new DurationDialog.OnDurationSetListener() {
             @Override
-            public void onDurationSet(int hourSet, int daySet, int weekSet) {
+            public void onDurationSet(int hourSet, int daySet, int weekSet, int secondsSet) {
                 hours = hourSet;
                 days = daySet;
                 weeks = weekSet;
+                seconds = secondsSet;
                 durationButton.setText(getString(R.string.duration, hours, days, weeks));
             }
         });
@@ -164,10 +162,10 @@ public class ModifyRewardActivity extends AppCompatActivity {
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
-        calendar.add(Calendar.SECOND, 10);
-//        calendar.add(Calendar.HOUR, hours);
-//        calendar.add(Calendar.DAY_OF_YEAR, days);
-//        calendar.add(Calendar.WEEK_OF_YEAR, weeks);
+        calendar.add(Calendar.SECOND, seconds);
+        calendar.add(Calendar.HOUR, hours);
+        calendar.add(Calendar.DAY_OF_YEAR, days);
+        calendar.add(Calendar.WEEK_OF_YEAR, weeks);
         Date endDate = calendar.getTime();
 
         float priceFloat = 0f;

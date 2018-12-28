@@ -13,6 +13,12 @@ public interface RewardDao {
     @Query("SELECT * FROM reward")
     List<Reward> getAllRewards();
 
+    @Query("SELECT * FROM reward WHERE finish >= :time")
+    List<Reward> getRewardsAfter(long time);
+
+    @Query("SELECT * FROM reward WHERE finish <= :time")
+    List<Reward> getRewardsBefore(long time);
+
     @Insert
     void insertRewards(Reward rewards);
 

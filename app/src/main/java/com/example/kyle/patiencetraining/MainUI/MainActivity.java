@@ -118,11 +118,11 @@ public class MainActivity extends AppCompatActivity{
         switch (requestCode){
             case ADD_REQUEST:
                 if(resultCode == RESULT_OK)
-                    new RewardAsyncTask(this,RewardAsyncTask.TASK_INSERT_REWARDS,listener).execute((Reward)data.getParcelableExtra(REWARD_EXTRA));
+                    new RewardAsyncTask(this,RewardAsyncTask.TASK_INSERT_REWARDS, -1, listener).execute((Reward)data.getParcelableExtra(REWARD_EXTRA));
                 break;
             case LockedFragment.MOD_REQUEST:
                 if(resultCode == Activity.RESULT_OK)
-                    new RewardAsyncTask(this,RewardAsyncTask.TASK_UPDATE_REWARDS,listener).execute((Reward)data.getParcelableExtra(MainActivity.REWARD_EXTRA));
+                    new RewardAsyncTask(this,RewardAsyncTask.TASK_UPDATE_REWARDS,-1, listener).execute((Reward)data.getParcelableExtra(MainActivity.REWARD_EXTRA));
                 break;
             case LoginActivity.LOGIN_TASK:
                 if(resultCode == Activity.RESULT_OK){

@@ -15,13 +15,10 @@ import com.example.kyle.patiencetraining.Reward.RewardAsyncTask;
 import com.example.kyle.patiencetraining.Reward.ClickedRewardDialog;
 import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.Reward.Reward;
-import com.example.kyle.patiencetraining.Reward.RewardFragment;
 import com.example.kyle.patiencetraining.Util.Score;
 import com.example.kyle.patiencetraining.Util.ScoreAsyncTask;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -30,7 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class UnlockedFragment extends Fragment implements RewardFragment {
+public class UnlockedFragment extends Fragment {
 
 
     private List<Reward> mUnlockedRewards = new ArrayList<>();
@@ -43,7 +40,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
     private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
         @Override
         public void onPostExecute(List<Reward> list) {
-            onRewardDbUpdated(list);
+            separateList(list);
         }
     };
 
@@ -87,18 +84,10 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
     }
 
     private void assignRewardToList(Reward reward){
-        Date now = new Date();
-        if(now.after(new Date(reward.getFinish()))) {
             mUnlockedRewards.add(reward);
             reward.setNotificationSet(false);
             setNotification(reward);
-        }
     }
-
-    private void onRewardDbUpdated(List<Reward> list) {
-        separateList(list);
-    }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -141,7 +130,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
                         deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS, listener).execute(mUnlockedRewards.get(position));
+                                new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS, RewardAsyncTask.REWARDS_BEFORE, listener).execute(mUnlockedRewards.get(position));
                             }
                         }).show();
                     }
@@ -151,7 +140,7 @@ public class UnlockedFragment extends Fragment implements RewardFragment {
         });
 
 
-        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, listener).execute();
+        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, RewardAsyncTask.REWARDS_BEFORE, listener).execute();
     }
 
     @Override

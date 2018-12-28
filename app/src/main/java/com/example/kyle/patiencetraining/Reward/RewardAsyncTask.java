@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import com.example.kyle.patiencetraining.Util.AppDatabase;
 
+import java.util.Date;
 import java.util.List;
 
 public class RewardAsyncTask extends AsyncTask<Reward, Void, List<Reward>> {
@@ -12,12 +13,16 @@ public class RewardAsyncTask extends AsyncTask<Reward, Void, List<Reward>> {
     public final static int TASK_DELETE_REWARDS = 1;
     public final static int TASK_INSERT_REWARDS = 3;
     public final static int TASK_UPDATE_REWARDS = 2;
+    public final static int REWARDS_BEFORE = 0;
+    public final static int REWARDS_AFTER = 1;
     private int task;
+    private int filter;
     private static AppDatabase sDatabase;
     private OnPostExecuteListener listener;
-    public RewardAsyncTask(Context context, int task, OnPostExecuteListener listener){
+    public RewardAsyncTask(Context context, int task, int filter, OnPostExecuteListener listener){
         this.task = task;
         this.listener = listener;
+        this.filter = filter;
         sDatabase = AppDatabase.getInstance(context);
     }
     @Override
@@ -33,7 +38,10 @@ public class RewardAsyncTask extends AsyncTask<Reward, Void, List<Reward>> {
                 sDatabase.rewardDao().updateRewards(rewards[0]);
                 break;
         }
-        return sDatabase.rewardDao().getAllRewards();
+        long now = new Date().getTime();
+        if(filter == REWARDS_AFTER)
+            return sDatabase.rewardDao().getRewardsAfter(now);
+        return sDatabase.rewardDao().getRewardsBefore(now);
     }
 
     @Override

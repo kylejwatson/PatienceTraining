@@ -20,7 +20,6 @@ import com.example.kyle.patiencetraining.MainUI.ModifyRewardActivity;
 import com.example.kyle.patiencetraining.Util.NotificationService;
 import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.Reward.Reward;
-import com.example.kyle.patiencetraining.Reward.RewardFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,11 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
 
-public class LockedFragment extends Fragment implements RewardFragment {
-
-    /**
-     * Todo: change rewardDAO so that theres two functions, one to get rewards that havent finished and one that have so list sorting isn't needed.
-     */
+public class LockedFragment extends Fragment {
 
     public static final String REWARD_NAME_BUNDLE = "RewardName";
     public static final String REWARD_ID_BUNDLE = "RewardID";
@@ -54,7 +49,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
     private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
         @Override
         public void onPostExecute(List<Reward> list) {
-            onRewardDbUpdated(list);
+            separateList(list);
         }
     };
 
@@ -103,11 +98,8 @@ public class LockedFragment extends Fragment implements RewardFragment {
     }
 
     private void assignRewardToList(Reward reward){
-        Date now = new Date();
-        if(now.before(new Date(reward.getFinish()))) {
             mLockedRewards.add(reward);
             setNotification(reward);
-        }
     }
 
     public void separateList(List<Reward> rewardList){
@@ -117,10 +109,6 @@ public class LockedFragment extends Fragment implements RewardFragment {
             assignRewardToList(reward);
         }
         updateUI();
-    }
-
-    private void onRewardDbUpdated(List<Reward> list) {
-        separateList(list);
     }
 
     @Override
@@ -157,7 +145,7 @@ public class LockedFragment extends Fragment implements RewardFragment {
                         deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS, listener).execute(mLockedRewards.get(position));
+                                new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS,RewardAsyncTask.REWARDS_AFTER, listener).execute(mLockedRewards.get(position));
                             }
                         }).show();
                     }
@@ -170,6 +158,6 @@ public class LockedFragment extends Fragment implements RewardFragment {
 
         componentName = new ComponentName(context, NotificationService.class);
 
-        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, listener).execute();
+        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, RewardAsyncTask.REWARDS_AFTER, listener).execute();
     }
 }

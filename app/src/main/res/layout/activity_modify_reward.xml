@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainUI.ModifyRewardActivity"
+    tools:context=".main.ModifyRewardActivity"
     tools:targetApi="o">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -121,7 +121,8 @@
         android:src="@drawable/ic_remove"
         app:layout_constraintBottom_toBottomOf="@id/fileName"
         app:layout_constraintEnd_toEndOf="@+id/uploadButton"
-        app:layout_constraintTop_toTopOf="@id/fileName" />
+        app:layout_constraintTop_toTopOf="@id/fileName"
+        android:contentDescription="@string/remove_icon_description" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/notificationSwitch"

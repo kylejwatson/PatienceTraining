@@ -56,7 +56,11 @@
     <string name="link_label">Link</string>
     <string name="link_hint">http://www.site-to-buy-reward.com</string>
     <string name="upload_label">Upload image</string>
-    <string name="upload_button">Browse device storage</string>
+    <string name="gallery_button">Select image from gallery</string>
+    <string name="gallery_icon_description">Icon for the image gallery button</string>
+    <string name="camera_button">Take a new photo</string>
+    <string name="camera_icon_description">Icon for the camera button</string>
+    <string name="remove_icon_description">Icon for the remove image button</string>
     <string name="notification_label">Set notification </string>
     <string name="http">http://</string>
     <string name="http_link">http://<xliff:g example="www.example.com" id="link">%s</xliff:g></string>

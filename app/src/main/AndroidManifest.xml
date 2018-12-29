@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.kyle.patiencetraining">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/my_backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -12,7 +15,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".MainUI.MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,15 +25,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainUI.ModifyRewardActivity"
+            android:name=".main.ModifyRewardActivity"
             android:label="@string/title_activity_add_reward"
-            android:parentActivityName=".MainUI.MainActivity" />
+            android:parentActivityName=".main.MainActivity" />
 
         <service
-            android:name=".Util.NotificationService"
+            android:name=".util.NotificationService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity android:name=".MainUI.LoginActivity"></activity>
+        <activity android:name=".main.LoginActivity"/>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.kyle.patiencetraining"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
 </manifest>

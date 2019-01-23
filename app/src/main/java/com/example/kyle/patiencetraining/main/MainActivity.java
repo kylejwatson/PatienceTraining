@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.kyle.patiencetraining.reward.MainViewModel;
 import com.example.kyle.patiencetraining.reward.locked.LockedFragment;
 import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.reward.Reward;
-import com.example.kyle.patiencetraining.reward.RewardAsyncTask;
 import com.example.kyle.patiencetraining.util.NotificationService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -42,15 +42,9 @@ public class MainActivity extends AppCompatActivity{
     public static final String REWARD_EXTRA = "PatienceTrainingReward";
     private static final int[] ACTIONBAR_TITLES = {R.string.locked_title,R.string.unlocked_title, R.string.leaderboard_title};
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
     private Menu menu;
-    private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
-        @Override
-        public void onPostExecute(List<Reward> list) {
-            mSectionsPagerAdapter.notifyDataSetChanged();
-        }
-    };
+
+    private MainViewModel mainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +53,11 @@ public class MainActivity extends AppCompatActivity{
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mainViewModel = new MainViewModel(getApplicationContext());
+
         Intent intent = getIntent();
         long rewardId = intent.getLongExtra(NotificationService.REWARD_ID_EXTRA,-1);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), 3, rewardId);
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), 3, rewardId);
         // Set up the ViewPager with the sections adapter.
         ViewPager mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -117,11 +113,11 @@ public class MainActivity extends AppCompatActivity{
         switch (requestCode){
             case ADD_REQUEST:
                 if(resultCode == RESULT_OK)
-                    new RewardAsyncTask(this,RewardAsyncTask.TASK_INSERT_REWARDS, -1, listener).execute((Reward)data.getParcelableExtra(REWARD_EXTRA));
+                    mainViewModel.insert((Reward)data.getParcelableExtra(REWARD_EXTRA));
                 break;
             case LockedFragment.MOD_REQUEST:
                 if(resultCode == Activity.RESULT_OK)
-                    new RewardAsyncTask(this,RewardAsyncTask.TASK_UPDATE_REWARDS,-1, listener).execute((Reward)data.getParcelableExtra(MainActivity.REWARD_EXTRA));
+                    mainViewModel.update((Reward)data.getParcelableExtra(MainActivity.REWARD_EXTRA));
                 break;
             case LoginActivity.LOGIN_TASK:
                 if(resultCode == Activity.RESULT_OK){

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.kyle.patiencetraining.main.SectionsPagerAdapter;
-import com.example.kyle.patiencetraining.reward.RewardAsyncTask;
+import com.example.kyle.patiencetraining.reward.MainViewModel;
 import com.example.kyle.patiencetraining.reward.ClickedRewardDialog;
 import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.reward.Reward;
@@ -19,11 +19,13 @@ import com.example.kyle.patiencetraining.util.Score;
 import com.example.kyle.patiencetraining.util.ScoreAsyncTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,12 +39,7 @@ public class UnlockedFragment extends Fragment {
     private JobScheduler jobScheduler;
     private LinearLayoutManager linearLayoutManager;
     private TextView emptyTextView;
-    private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
-        @Override
-        public void onPostExecute(List<Reward> list) {
-            separateList(list);
-        }
-    };
+    private MainViewModel mainViewModel;
 
     public UnlockedFragment() {
         // Required empty public constructor
@@ -130,7 +127,7 @@ public class UnlockedFragment extends Fragment {
                         deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS, RewardAsyncTask.REWARDS_BEFORE, listener).execute(mUnlockedRewards.get(position));
+                                mainViewModel.delete(mUnlockedRewards.get(position));
                             }
                         }).show();
                     }
@@ -139,8 +136,13 @@ public class UnlockedFragment extends Fragment {
             }
         });
 
-
-        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, RewardAsyncTask.REWARDS_BEFORE, listener).execute();
+        mainViewModel = new MainViewModel(context.getApplicationContext());
+        mainViewModel.getRewardsBefore(new Date().getTime()).observe(this, new Observer<List<Reward>>() {
+            @Override
+            public void onChanged(List<Reward> rewards) {
+                separateList(rewards);
+            }
+        });
     }
 
     @Override

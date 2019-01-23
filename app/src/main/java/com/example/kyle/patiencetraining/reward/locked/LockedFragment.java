@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.kyle.patiencetraining.reward.RewardAsyncTask;
+import com.example.kyle.patiencetraining.reward.MainViewModel;
 import com.example.kyle.patiencetraining.reward.ClickedRewardDialog;
 import com.example.kyle.patiencetraining.main.MainActivity;
 import com.example.kyle.patiencetraining.main.ModifyRewardActivity;
@@ -28,6 +28,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,12 +47,7 @@ public class LockedFragment extends Fragment {
     private JobScheduler jobScheduler;
     private ComponentName componentName;
     private TextView emptyTextView;
-    private RewardAsyncTask.OnPostExecuteListener listener = new RewardAsyncTask.OnPostExecuteListener() {
-        @Override
-        public void onPostExecute(List<Reward> list) {
-            separateList(list);
-        }
-    };
+    private MainViewModel mainViewModel;
 
     private LockedClickedReward.OnEditListener editListener = new LockedClickedReward.OnEditListener() {
         @Override
@@ -145,7 +141,7 @@ public class LockedFragment extends Fragment {
                         deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                new RewardAsyncTask(getContext(), RewardAsyncTask.TASK_DELETE_REWARDS,RewardAsyncTask.REWARDS_AFTER, listener).execute(mLockedRewards.get(position));
+                            mainViewModel.delete(mLockedRewards.get(position));
                             }
                         }).show();
                     }
@@ -158,6 +154,12 @@ public class LockedFragment extends Fragment {
 
         componentName = new ComponentName(context, NotificationService.class);
 
-        new RewardAsyncTask(context, RewardAsyncTask.TASK_GET_ALL_REWARDS, RewardAsyncTask.REWARDS_AFTER, listener).execute();
+        mainViewModel = new MainViewModel(context.getApplicationContext());
+        mainViewModel.getRewardsAfter(new Date().getTime()).observe(this, new Observer<List<Reward>>() {
+            @Override
+            public void onChanged(List<Reward> rewards) {
+                separateList(rewards);
+            }
+        });
     }
 }

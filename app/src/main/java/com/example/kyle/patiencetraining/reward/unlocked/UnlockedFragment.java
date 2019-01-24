@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.job.JobScheduler;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,12 +125,18 @@ public class UnlockedFragment extends Fragment {
                 ClickedRewardDialog dialog = new UnlockedClickedReward(context, mUnlockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener(){
                     @Override
                     public void onDelete(final int position) {
-                        deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                mainViewModel.delete(mUnlockedRewards.get(position));
-                            }
-                        }).show();
+                        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        Boolean deleteConfirm = sharedPreferences.getBoolean(context.getString(R.string.delete_key), true);
+                        if(deleteConfirm) {
+                            deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    mainViewModel.delete(mUnlockedRewards.get(position));
+                                }
+                            }).show();
+                        }else{
+                            mainViewModel.delete(mUnlockedRewards.get(position));
+                        }
                     }
                 });
                 dialog.show();

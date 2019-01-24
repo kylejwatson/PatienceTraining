@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.LayoutInflater;
@@ -138,12 +139,18 @@ public class LockedFragment extends Fragment {
                 ClickedRewardDialog dialog = new LockedClickedReward(context, mLockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener() {
                     @Override
                     public void onDelete(final int position) {
-                        deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        Boolean deleteConfirm = sharedPreferences.getBoolean(context.getString(R.string.delete_key), true);
+                        if(deleteConfirm) {
+                            deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    mainViewModel.delete(mLockedRewards.get(position));
+                                }
+                            }).show();
+                        }else{
                             mainViewModel.delete(mLockedRewards.get(position));
-                            }
-                        }).show();
+                        }
                     }
                 },editListener);
                 dialog.show();

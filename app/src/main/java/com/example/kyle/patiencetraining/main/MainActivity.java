@@ -30,15 +30,9 @@ public class MainActivity extends AppCompatActivity{
     /**
      *
      *
-     * Todo: update adapter to show hours,days,weeks?
+     * Todo: add timeline to each reward
      *
-     * Todo: make settings menu get all options needed
-     *       - Data saver (dont get thumbnails of sites)
-     *       - Confirmation before deleting
-     *       - Display name
-     *       - notification noise
-     *       - pre-emptive notification
-     *       - feedback/suggestions
+
      * Todo: Make activities/layouts for each option
      * Todo: Start theming/dimens sorting
      */
@@ -186,6 +180,7 @@ public class MainActivity extends AppCompatActivity{
         //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.action_settings:
+                startActivity(new Intent(this,SettingsActivity.class));
                 return true;
             case R.id.action_signin:
                 // Configure Google Sign In

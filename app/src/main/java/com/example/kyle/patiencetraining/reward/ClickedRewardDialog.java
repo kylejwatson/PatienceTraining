@@ -2,6 +2,7 @@ package com.example.kyle.patiencetraining.reward;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +45,9 @@ public abstract class ClickedRewardDialog extends Dialog {
 
     private void setImage(Reward reward, Context context){
         imageView.setImageURI(null);
-        if(reward.getImagePath().isEmpty() && !reward.getImageLink().isEmpty()){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        Boolean dataSaved = sharedPreferences.getBoolean(context.getString(R.string.data_saver_key),false);
+        if(!dataSaved && reward.getImagePath().isEmpty() && !reward.getImageLink().isEmpty()){
             Glide.with(context).load(reward.getImageLink()).into(imageView);
         }else if(!reward.getImagePath().isEmpty()){
             imageView.setImageURI(Uri.parse(reward.getImagePath()));

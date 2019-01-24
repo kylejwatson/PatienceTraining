@@ -3,6 +3,7 @@ package com.example.kyle.patiencetraining.leaderboard;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -55,6 +56,8 @@ public class LeaderboardFragment extends Fragment {
     private List<User> mUsers = new ArrayList<>();
     private ProgressBar progressBar;
     private final static int RANGE = 10;
+    private String userName;
+    private SharedPreferences sharedPreferences;
 
     public LeaderboardFragment() {
 
@@ -129,9 +132,7 @@ public class LeaderboardFragment extends Fragment {
 
     private void createUser(final String uID){
         user = new User();
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(fUser != null)
-            user.userName = fUser.getDisplayName();
+        user.userName = userName;
         user.totalTime = 0;
         addScore(uID);
     }
@@ -180,6 +181,9 @@ public class LeaderboardFragment extends Fragment {
                         if(documentSnapshot != null) {
                             user = documentSnapshot.toObject(User.class);
                             if (user != null) {
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString(getString(R.string.name_key), user.userName);
+                                editor.apply();
                                 String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
                                 yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
                             }
@@ -239,6 +243,14 @@ public class LeaderboardFragment extends Fragment {
         super.onAttach(context);
         loginIntent = new Intent(context, LoginActivity.class);
         loginIntent.putExtra(LoginActivity.LOGIN_TASK_EXTRA, LoginActivity.LOGIN_TASK);
+
+        sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        userName = "";
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(fUser != null)
+            userName = fUser.getDisplayName();
+
+        userName = sharedPreferences.getString(getString(R.string.name_key), userName);
     }
 
     @Override

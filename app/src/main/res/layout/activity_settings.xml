@@ -45,4 +45,27 @@
         app:layout_constraintStart_toEndOf="@id/deleteImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dataSaverSwitch"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/nameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/display_name_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deleteSwitch"
+        android:labelFor="@id/nameEditText"
+        />
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameLabel"
+        android:importantForAutofill="no"
+        android:inputType="text" />
 </androidx.constraintlayout.widget.ConstraintLayout>

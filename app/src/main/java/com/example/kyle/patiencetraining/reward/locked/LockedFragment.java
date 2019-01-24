@@ -139,8 +139,8 @@ public class LockedFragment extends Fragment {
                 ClickedRewardDialog dialog = new LockedClickedReward(context, mLockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener() {
                     @Override
                     public void onDelete(final int position) {
-                        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-                        Boolean deleteConfirm = sharedPreferences.getBoolean(context.getString(R.string.delete_key), true);
+                        SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        Boolean deleteConfirm = sharedPreferences.getBoolean(getString(R.string.delete_key), true);
                         if(deleteConfirm) {
                             deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override

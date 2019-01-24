@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
 
     <TextView
         android:id="@+id/secondLabel"
@@ -13,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="@string/second"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/secondPicker"
         app:layout_constraintStart_toStartOf="@+id/secondPicker"
         app:layout_constraintTop_toTopOf="parent" />
@@ -100,7 +98,7 @@
 
     <TextView
         android:id="@+id/errorTextView"
-        style="@style/TextAppearance.MaterialComponents.Error"
+        style="@style/TextAppearance.Design.Error"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"

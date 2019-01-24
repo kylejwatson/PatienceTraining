@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,18 +28,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class LeaderboardFragment extends Fragment {
 
     /**
-     * Todo: figure out what range I want to load from the leaderboard I think 20-50 around the users rank
+     * TODO: add load more buttons for top and bottom ranges
      */
 
     private Intent loginIntent;
@@ -52,6 +54,7 @@ public class LeaderboardFragment extends Fragment {
     private User user;
     private List<User> mUsers = new ArrayList<>();
     private ProgressBar progressBar;
+    private final static int RANGE = 10;
 
     public LeaderboardFragment() {
 
@@ -97,28 +100,28 @@ public class LeaderboardFragment extends Fragment {
         return view;
     }
 
-    private void getOtherUsers(){
+    private void getOtherUsers(long rank){
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .orderBy("rank", Query.Direction.ASCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .whereGreaterThanOrEqualTo("rank",rank-RANGE)
+                .whereLessThanOrEqualTo("rank", rank+RANGE)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if(queryDocumentSnapshots != null) {
+                            List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
                             mUsers.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (DocumentSnapshot document : snapshots) {
                                 User tempUser = document.toObject(User.class);
-                                if(tempUser.userName == null)
+                                assert tempUser != null;
+                                if (tempUser.userName == null)
                                     tempUser.userName = document.getId();
                                 mUsers.add(tempUser);
                             }
                             recyclerView.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
                             adapter.notifyDataSetChanged();
-                        } else {
-                            Log.d(LeaderboardFragment.class.getSimpleName(), "Error Getting Documents");
-                            //UpdateUI "Error getting documents"
                         }
                     }
                 });
@@ -159,12 +162,30 @@ public class LeaderboardFragment extends Fragment {
                                 String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
                                 yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
                             }
-                            getOtherUsers();
+                            setCurrentUserListener(uID);
+                            getOtherUsers(user.rank);
                         }
                     }
                 });
             }
         }).execute();
+    }
+
+    private void setCurrentUserListener(final String uID){
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(uID)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if(documentSnapshot != null) {
+                            user = documentSnapshot.toObject(User.class);
+                            if (user != null) {
+                                String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
+                                yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
+                            }
+                        }
+                    }
+                });
     }
 
     private void getCurrentUser(final String uID){

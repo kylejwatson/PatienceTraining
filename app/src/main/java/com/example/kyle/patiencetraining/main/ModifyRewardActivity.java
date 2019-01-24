@@ -66,7 +66,7 @@ public class ModifyRewardActivity extends AppCompatActivity {
         uploadDialog.setGalleryButtonListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                Intent pickPhoto = new Intent(Intent.ACTION_OPEN_DOCUMENT,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(pickPhoto , GET_FROM_GALLERY);
             }
@@ -127,7 +127,7 @@ public class ModifyRewardActivity extends AppCompatActivity {
                 link.setText(buildLink(link.getText().toString()));
                 if(name.getText().length() == 0)
                     name.setError(getString(R.string.missing_input,getString(R.string.missing_name)));
-                else if(link.getText().length() > 0 && Patterns.WEB_URL.matcher(link.getText()).matches()) {
+                else if(link.getText().length() > 0 && !Patterns.WEB_URL.matcher(link.getText().toString()).matches()) {
                     link.setError(getString(R.string.invalid_link));
                 }else {
                     if(oldReward != null)
@@ -148,10 +148,9 @@ public class ModifyRewardActivity extends AppCompatActivity {
             price.setText(String.format(Locale.getDefault(), "%.2f", oldReward.getPrice()));
             link.setText(oldReward.getLink());
             notification.setChecked(oldReward.isNotificationSet());
-            imageUri = Uri.parse(oldReward.getImagePath());
-            if(imageUri != null) {
-                fileName.setText(getFileName(imageUri));
-                clearButton.setVisibility(View.VISIBLE);
+            if(!oldReward.getImagePath().isEmpty()) {
+                imageUri = Uri.parse(oldReward.getImagePath());
+                setImageUri(imageUri, getFileName(imageUri));
             }
             ActionBar ab = getSupportActionBar();
             if(ab != null)
@@ -206,7 +205,12 @@ public class ModifyRewardActivity extends AppCompatActivity {
         oldReward.setName(name.toString());
         oldReward.setLink(link.toString());
         oldReward.setNotificationSet(notification);
-        oldReward.setImagePath(imageUri.toString());
+
+        String image = "";
+        if(imageUri != null)
+            image = imageUri.toString();
+
+        oldReward.setImagePath(image);
 
         Intent intent = new Intent();
         intent.putExtra(MainActivity.REWARD_EXTRA, oldReward);
@@ -267,19 +271,22 @@ public class ModifyRewardActivity extends AppCompatActivity {
         return result;
     }
 
+    public void setImageUri(Uri imageUri, String fileName){
+        this.imageUri = imageUri;
+        this.fileName.setText(fileName);
+        clearButton.setVisibility(View.VISIBLE);
+        uploadDialog.hide();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == GET_FROM_GALLERY ){
             if(resultCode == RESULT_OK){
-                imageUri = data.getData();
-                fileName.setText(getFileName(imageUri));
-                clearButton.setVisibility(View.VISIBLE);
+                setImageUri(data.getData(),getFileName(imageUri));
             }
         }else if(requestCode == GET_FROM_CAMERA){
             if(resultCode == RESULT_OK){
-                imageUri = photoURI;
-                fileName.setText(mCurrentPhotoPath);
-                clearButton.setVisibility(View.VISIBLE);
+                setImageUri(photoURI,mCurrentPhotoPath);
             }
         }
     }

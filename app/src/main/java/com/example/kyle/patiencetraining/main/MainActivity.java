@@ -31,9 +31,14 @@ public class MainActivity extends AppCompatActivity{
      *
      *
      * Todo: update adapter to show hours,days,weeks?
-     * Todo: pass action bar arguments to fragments
      *
      * Todo: make settings menu get all options needed
+     *       - Data saver (dont get thumbnails of sites)
+     *       - Confirmation before deleting
+     *       - Display name
+     *       - notification noise
+     *       - pre-emptive notification
+     *       - feedback/suggestions
      * Todo: Make activities/layouts for each option
      * Todo: Start theming/dimens sorting
      */
@@ -121,8 +126,6 @@ public class MainActivity extends AppCompatActivity{
                 break;
             case LoginActivity.LOGIN_TASK:
                 if(resultCode == Activity.RESULT_OK){
-//                    String uID = data.getStringExtra(LoginActivity.UID_EXTRA);
-//                    firestoreDB(uID);
                     menu.findItem(R.id.action_signout).setVisible(true);
                     menu.findItem(R.id.action_signin).setVisible(false);
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.mainLayout), R.string.success, Snackbar.LENGTH_LONG);

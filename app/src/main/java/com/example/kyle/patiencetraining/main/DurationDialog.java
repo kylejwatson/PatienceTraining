@@ -20,15 +20,12 @@ class DurationDialog extends Dialog {
     private final NumberPicker dayPicker;
     private final NumberPicker weekPicker;
 
-    /**
-     * Todo: remove second picker when not debugging
-     */
-    private final NumberPicker secondPicker;
     private int seconds;
     private final String error;
     private final  TextView errorText;
     private final ImageView errorIcon;
     private final Button okButton;
+    private static final boolean DEBUG = false;
 
     DurationDialog(@NonNull Context context, String error, final OnDurationSetListener listener) {
         super(context);
@@ -45,17 +42,21 @@ class DurationDialog extends Dialog {
         weekPicker = findViewById(R.id.weekPicker);
         weekPicker.setMaxValue(100);
 
-        secondPicker = findViewById(R.id.secondPicker);
-        secondPicker.setVisibility(View.VISIBLE);
-        secondPicker.setMaxValue(60);
-        secondPicker.setValue(1);
-        secondPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                seconds = i1;
-                checkError();
-            }
-        });
+        NumberPicker secondPicker = findViewById(R.id.secondPicker);
+        if(DEBUG) {
+            TextView secondLabel = findViewById(R.id.secondLabel);
+            secondLabel.setVisibility(View.VISIBLE);
+            secondPicker.setVisibility(View.VISIBLE);
+            secondPicker.setMaxValue(60);
+            secondPicker.setValue(1);
+            secondPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                    seconds = i1;
+                    checkError();
+                }
+            });
+        }
 
         hourPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -110,7 +111,7 @@ class DurationDialog extends Dialog {
     }
 
     private void checkError(){
-        if(hours+days+weeks+seconds == 0){
+        if(hours+days+weeks+seconds == 0 && DEBUG || hours+days+weeks == 0 && !DEBUG){
             setError(error);
         }else{
             setError(null);

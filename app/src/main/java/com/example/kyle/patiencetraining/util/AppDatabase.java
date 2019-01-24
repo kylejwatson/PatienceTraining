@@ -9,7 +9,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Reward.class,Score.class},version = 2)
+@Database(entities = {Reward.class,Score.class},version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract RewardDao rewardDao();
     public abstract ScoreDao scoreDao();

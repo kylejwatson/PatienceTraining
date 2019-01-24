@@ -1,13 +1,24 @@
 package com.example.kyle.patiencetraining.reward;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.bumptech.glide.Glide;
+import com.example.kyle.patiencetraining.util.UrlApiService;
+import com.example.kyle.patiencetraining.util.UrlImage;
+import com.example.kyle.patiencetraining.util.UrlInfo;
 
 import java.util.Date;
+import java.util.List;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @Entity(tableName = "reward")
 public class Reward implements Parcelable {
@@ -24,6 +35,8 @@ public class Reward implements Parcelable {
     private long finish;
     @ColumnInfo(name = "link")
     private String link;
+    @ColumnInfo(name = "imageLink")
+    private String imageLink;
     @ColumnInfo(name = "imagePath")
     private String imagePath;
     @ColumnInfo(name = "notificationSet")
@@ -40,6 +53,37 @@ public class Reward implements Parcelable {
         this.imagePath = imagePath;
         this.notificationSet = notificationSet;
         notificationJobId = new Date(start).hashCode();
+
+        if(imagePath.isEmpty() && !link.isEmpty()){
+            requestData(link);
+        }
+    }
+
+    private void requestData(String url){
+        imageLink = "";
+        if(!url.isEmpty()) {
+            UrlApiService service = UrlApiService.retrofit.create(UrlApiService.class);
+
+            Call<UrlInfo> call = service.getUrlInfo(url);
+
+            call.enqueue(new Callback<UrlInfo>() {
+                @Override
+                public void onResponse(Call<UrlInfo> call, Response<UrlInfo> response) {
+                    UrlInfo info = response.body();
+                    if (info != null) {
+                        List<UrlImage> images = info.getUrlImages();
+                        if (!images.isEmpty()) {
+                            imageLink = images.get(0).getSrc();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UrlInfo> call, Throwable t) {
+                    Log.d("error", t.toString());
+                }
+            });
+        }
     }
 
     protected Reward(Parcel in) {
@@ -49,6 +93,7 @@ public class Reward implements Parcelable {
         start = in.readLong();
         finish = in.readLong();
         link = in.readString();
+        imageLink = in.readString();
         imagePath = in.readString();
         notificationSet = in.readByte() != 0;
         notificationJobId = in.readInt();
@@ -102,16 +147,22 @@ public class Reward implements Parcelable {
         return finish;
     }
 
-//    public void setFinish(long finish) {
-//        this.finish = finish;
-//    }
-
     public String getLink() {
         return link;
     }
 
     public void setLink(String link) {
+        if(!link.equals(this.link))
+            requestData(link);
         this.link = link;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
     public String getImagePath() {
@@ -143,6 +194,7 @@ public class Reward implements Parcelable {
         parcel.writeLong(start);
         parcel.writeLong(finish);
         parcel.writeString(link);
+        parcel.writeString(imageLink);
         parcel.writeString(imagePath);
         parcel.writeByte((byte) (notificationSet ? 1 : 0));
         parcel.writeInt(notificationJobId);

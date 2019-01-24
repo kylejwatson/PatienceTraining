@@ -42,35 +42,10 @@ public abstract class ClickedRewardDialog extends Dialog {
         });
     }
 
-
-    private void requestData(String url, final Context context){
-        UrlApiService service = UrlApiService.retrofit.create(UrlApiService.class);
-
-        Call<UrlInfo> call = service.getUrlInfo(url);
-
-        call.enqueue(new Callback<UrlInfo>() {
-            @Override
-            public void onResponse(Call<UrlInfo> call, Response<UrlInfo> response) {
-                UrlInfo info = response.body();
-                if(info != null){
-                    List<UrlImage> images = info.getUrlImages();
-                    if(!images.isEmpty()){
-                        Glide.with(context).load(images.get(0).getSrc()).into(imageView);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UrlInfo> call, Throwable t) {
-                Log.d("error",t.toString());
-            }
-        });
-    }
-
     private void setImage(Reward reward, Context context){
         imageView.setImageURI(null);
-        if(reward.getImagePath().isEmpty() && !reward.getLink().isEmpty()){
-            requestData(reward.getLink(), context);
+        if(reward.getImagePath().isEmpty() && !reward.getImageLink().isEmpty()){
+            Glide.with(context).load(reward.getImageLink()).into(imageView);
         }else if(!reward.getImagePath().isEmpty()){
             imageView.setImageURI(Uri.parse(reward.getImagePath()));
         }

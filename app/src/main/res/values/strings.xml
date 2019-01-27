@@ -118,8 +118,6 @@
     <!-- Start of settings strings -->
     <!--
     - Confirmation before deleting
-     *       - Display name
-     *       - notification noise
      *       - pre-emptive notification
      *       - feedback/suggestions
      -->
@@ -135,7 +133,11 @@
     <string name="notification_uri_key">NOTIFICATION_URI_KEY</string>
     <string name="notification_title_key">NOTIFICATION_TITLE_KEY</string>
     <string name="notification_time_label">Time to send notification before reward is unlocked</string>
-    <string name="feedback_label">If you have any feedback or suggestions please send them to me.</string>
+    <string name="about_label">About the app</string>
+    <string name="version_label">Version: Beta1.0</string>
+    <string name="developer_label">Developer: Kyle Watson \n
+                                    Hogeschool van Amsterdam \n
+                                    kyle.watson@hva.nl</string>
 
     <!-- End of settings strings -->
 </resources>

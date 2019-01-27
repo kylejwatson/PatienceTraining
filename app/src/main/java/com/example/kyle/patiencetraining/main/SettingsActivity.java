@@ -24,7 +24,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     /** Todo: make settings menu get all options needed
      *       - pre-emptive notification
-     *       - feedback/suggestions
      *       **/
 
 

@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity{
 
     /**
      *
-     * Todo: add observers to the 'get before reward' and 'get after reward' queries so the recyclerViews update without reloading
      * Todo: add timeline to each reward
      *
 

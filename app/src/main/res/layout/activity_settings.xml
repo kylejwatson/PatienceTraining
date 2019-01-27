@@ -93,11 +93,62 @@
         android:id="@+id/notificationLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         app:layout_constraintStart_toEndOf="@id/notificationSound"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/notificationSound"
         app:layout_constraintTop_toTopOf="@id/notificationSound"
         android:labelFor="@id/notificationSound"
         />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/aboutImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/aboutLabel"
+        app:layout_constraintBottom_toBottomOf="@id/aboutLabel"
+        app:srcCompat="@drawable/ic_info" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/aboutLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        app:layout_constraintStart_toEndOf="@id/aboutImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/notificationSound"
+        android:text="@string/about_label"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/versionLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toEndOf="@id/aboutImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/aboutLabel"
+        android:text="@string/version_label"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/developerLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toEndOf="@id/aboutImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/versionLabel"
+        android:text="@string/developer_label"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

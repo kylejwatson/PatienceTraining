@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SettingsActivity extends AppCompatActivity {
 
     /** Todo: make settings menu get all options needed
-     *       - notification noise
      *       - pre-emptive notification
      *       - feedback/suggestions
      *       **/

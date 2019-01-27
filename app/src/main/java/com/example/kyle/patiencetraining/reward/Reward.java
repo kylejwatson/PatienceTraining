@@ -41,6 +41,8 @@ public class Reward implements Parcelable {
     private boolean notificationSet;
     @ColumnInfo(name = "notificationJobId")
     private int notificationJobId;
+    @ColumnInfo(name = "finished")
+    private boolean finished;
 
     public Reward(String name, float price, long start, long finish, String link, String imagePath, boolean notificationSet) {
         this.name = name;
@@ -51,6 +53,7 @@ public class Reward implements Parcelable {
         this.imagePath = imagePath;
         this.notificationSet = notificationSet;
         notificationJobId = new Date(start).hashCode();
+        finished = false;
         imageLink = "";
         if(imagePath.isEmpty() && !link.isEmpty()){
             requestData(link);
@@ -94,6 +97,7 @@ public class Reward implements Parcelable {
         imagePath = in.readString();
         notificationSet = in.readByte() != 0;
         notificationJobId = in.readInt();
+        finished = in.readByte() != 0;
     }
 
     public static final Creator<Reward> CREATOR = new Creator<Reward>() {
@@ -195,6 +199,7 @@ public class Reward implements Parcelable {
         parcel.writeString(imagePath);
         parcel.writeByte((byte) (notificationSet ? 1 : 0));
         parcel.writeInt(notificationJobId);
+        parcel.writeByte((byte) (finished ? 1 : 0));
     }
 
     public int getNotificationJobId() {
@@ -203,5 +208,13 @@ public class Reward implements Parcelable {
 
     public void setNotificationJobId(int notificationJobId) {
         this.notificationJobId = notificationJobId;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }

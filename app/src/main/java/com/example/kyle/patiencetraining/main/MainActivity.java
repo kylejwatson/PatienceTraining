@@ -1,13 +1,17 @@
 package com.example.kyle.patiencetraining.main;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.kyle.patiencetraining.reward.MainViewModel;
+import com.example.kyle.patiencetraining.reward.RewardDao;
 import com.example.kyle.patiencetraining.reward.locked.LockedFragment;
 import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.reward.Reward;
+import com.example.kyle.patiencetraining.util.AppDatabase;
 import com.example.kyle.patiencetraining.util.NotificationService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -19,11 +23,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.view.View;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -53,6 +60,15 @@ public class MainActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         mainViewModel = new MainViewModel(getApplicationContext());
+        Handler handler = new Handler();
+        int delay = 10000;
+        handler.postDelayed(new Runnable(){
+            public void run(){
+                Executor executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> sortRewards());
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
 
         Intent intent = getIntent();
         long rewardId = intent.getLongExtra(NotificationService.REWARD_ID_EXTRA,-1);
@@ -81,12 +97,19 @@ public class MainActivity extends AppCompatActivity{
         if(rewardId != -1)
             mViewPager.setCurrentItem(1);
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(MainActivity.this, ModifyRewardActivity.class), ADD_REQUEST);
+        fab.setOnClickListener(view -> startActivityForResult(new Intent(MainActivity.this, ModifyRewardActivity.class), ADD_REQUEST));
+    }
+
+    private void sortRewards(){
+        AppDatabase database = AppDatabase.getInstance(this);
+        RewardDao dao = database.rewardDao();
+        List<Reward> rewards = dao.getRewardsToSort();
+        for (Reward reward:rewards) {
+            if(reward.getFinish() <= new Date().getTime()){
+                reward.setFinished(true);
+                mainViewModel.update(reward);
             }
-        });
+        }
     }
 
     private void signOut(){
@@ -112,23 +135,18 @@ public class MainActivity extends AppCompatActivity{
         switch (requestCode){
             case ADD_REQUEST:
                 if(resultCode == RESULT_OK)
-                    mainViewModel.insert((Reward)data.getParcelableExtra(REWARD_EXTRA));
+                    mainViewModel.insert(data.getParcelableExtra(REWARD_EXTRA));
                 break;
             case LockedFragment.MOD_REQUEST:
                 if(resultCode == Activity.RESULT_OK)
-                    mainViewModel.update((Reward)data.getParcelableExtra(MainActivity.REWARD_EXTRA));
+                    mainViewModel.update(data.getParcelableExtra(MainActivity.REWARD_EXTRA));
                 break;
             case LoginActivity.LOGIN_TASK:
                 if(resultCode == Activity.RESULT_OK){
                     menu.findItem(R.id.action_signout).setVisible(true);
                     menu.findItem(R.id.action_signin).setVisible(false);
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.mainLayout), R.string.success, Snackbar.LENGTH_LONG);
-                    snackbar.setAction(R.string.signout, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            signOut();
-                        }
-                    });
+                    snackbar.setAction(R.string.signout, view -> signOut());
                     snackbar.show();
                 }else{
                     Snackbar.make(findViewById(R.id.mainLayout), R.string.goog_error, Snackbar.LENGTH_LONG).show();
@@ -139,12 +157,7 @@ public class MainActivity extends AppCompatActivity{
                     menu.findItem(R.id.action_signout).setVisible(false);
                     menu.findItem(R.id.action_signin).setVisible(true);
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.mainLayout), R.string.success_signout, Snackbar.LENGTH_LONG);
-                    snackbar.setAction(R.string.common_signin_button_text, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            signIn();
-                        }
-                    });
+                    snackbar.setAction(R.string.common_signin_button_text, view -> signIn());
                     snackbar.show();
                 }else{
                     Snackbar.make(findViewById(R.id.mainLayout), R.string.serv_error, Snackbar.LENGTH_LONG).show();

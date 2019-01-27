@@ -14,11 +14,17 @@ public interface RewardDao {
     @Query("SELECT * FROM reward")
     LiveData<List<Reward>> getAllRewards();
 
-    @Query("SELECT * FROM reward WHERE finish >= :time")
-    LiveData<List<Reward>> getRewardsAfter(long time);
+    @Query("SELECT * FROM reward WHERE finished = 0")
+    LiveData<List<Reward>> getRewardsAfter();
 
-    @Query("SELECT * FROM reward WHERE finish <= :time")
-    LiveData<List<Reward>> getRewardsBefore(long time);
+    @Query("SELECT * FROM reward WHERE finished = 1")
+    LiveData<List<Reward>> getRewardsBefore();
+
+    @Query("SELECT * FROM reward WHERE finished = 0")
+    List<Reward> getRewardsToSort();
+
+    @Query("SELECT * FROM reward WHERE id = :id")
+    Reward getReward(long id);
 
     @Insert
     void insertRewards(Reward rewards);

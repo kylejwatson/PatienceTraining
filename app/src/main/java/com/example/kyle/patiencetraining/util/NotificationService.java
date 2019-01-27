@@ -11,15 +11,25 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 
+import com.example.kyle.patiencetraining.reward.MainViewModel;
+import com.example.kyle.patiencetraining.reward.Reward;
+import com.example.kyle.patiencetraining.reward.RewardDao;
 import com.example.kyle.patiencetraining.reward.locked.LockedFragment;
 import com.example.kyle.patiencetraining.main.MainActivity;
 import com.example.kyle.patiencetraining.R;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
-public class NotificationService extends JobService {
+public class NotificationService extends JobService{
 
     /**
      * Add sound
@@ -30,9 +40,20 @@ public class NotificationService extends JobService {
     private static final String CHANNEL_ID = "REWARD_CHANNEL";
     public static final String REWARD_ID_EXTRA = "reward_id_extra";
 
+    void setFinished(long id){
+        AppDatabase database = AppDatabase.getInstance(this);
+        RewardDao dao = database.rewardDao();
+        Reward reward = dao.getReward(id);
+        reward.setFinished(true);
+        dao.updateRewards(reward);
+    }
+
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Long id = jobParameters.getExtras().getLong(LockedFragment.REWARD_ID_BUNDLE);
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> setFinished(id));
+
         // Create an Intent for the activity you want to start
         Intent resultIntent = new Intent(this, MainActivity.class);
         resultIntent.putExtra(REWARD_ID_EXTRA,id);

@@ -57,61 +57,39 @@ public class ModifyRewardActivity extends AppCompatActivity {
         oldReward = getIntent().getParcelableExtra(MainActivity.REWARD_EXTRA);
         
         uploadDialog = new PictureLocationDialog(this);
-        uploadDialog.setCameraButtonListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
-        uploadDialog.setGalleryButtonListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent pickPhoto = new Intent(Intent.ACTION_OPEN_DOCUMENT,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , GET_FROM_GALLERY);
-            }
+        uploadDialog.setCameraButtonListener(view -> dispatchTakePictureIntent());
+        uploadDialog.setGalleryButtonListener(view -> {
+            Intent pickPhoto = new Intent(Intent.ACTION_OPEN_DOCUMENT,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(pickPhoto , GET_FROM_GALLERY);
         });
         final Button uploadButton = findViewById(R.id.uploadButton);
-        uploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                uploadDialog.show();
-            }
-        });
+        uploadButton.setOnClickListener(view -> uploadDialog.show());
 
         fileName = findViewById(R.id.fileName);
         clearButton = findViewById(R.id.removeImageButton);
-        clearButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imageUri = null;
-                fileName.setText("");
-                clearButton.setVisibility(View.INVISIBLE);
-            }
+        clearButton.setOnClickListener(view -> {
+            imageUri = null;
+            fileName.setText("");
+            clearButton.setVisibility(View.INVISIBLE);
         });
 
         final Button durationButton = findViewById(R.id.durationPicker);
         durationButton.setText(getString(R.string.duration, hours, days, weeks));
 
-        final DurationDialog dialog = new DurationDialog(this, getString(R.string.missing_input,getString(R.string.missing_duration)), new DurationDialog.OnDurationSetListener() {
-            @Override
-            public void onDurationSet(int hourSet, int daySet, int weekSet, int secondsSet) {
-                hours = hourSet;
-                days = daySet;
-                weeks = weekSet;
-                seconds = secondsSet;
-                durationButton.setText(getString(R.string.duration, hours, days, weeks));
-            }
+        final DurationDialog dialog = new DurationDialog(this, getString(R.string.missing_input,getString(R.string.missing_duration)), (hourSet, daySet, weekSet, secondsSet) -> {
+            hours = hourSet;
+            days = daySet;
+            weeks = weekSet;
+            seconds = secondsSet;
+            durationButton.setText(getString(R.string.duration, hours, days, weeks));
         });
 
-        durationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.setHours(hours);
-                dialog.setDays(days);
-                dialog.setWeeks(weeks);
-                dialog.show();
-            }
+        durationButton.setOnClickListener(view -> {
+            dialog.setHours(hours);
+            dialog.setDays(days);
+            dialog.setWeeks(weeks);
+            dialog.show();
         });
 
         final EditText name = findViewById(R.id.nameEditText);
@@ -119,24 +97,22 @@ public class ModifyRewardActivity extends AppCompatActivity {
 
         final EditText link = findViewById(R.id.linkEditText);
         final SwitchMaterial notification = findViewById(R.id.notificationSwitch);
+        notification.setChecked(true);
 
         FloatingActionButton fab = findViewById(R.id.modifyFab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                link.setText(buildLink(link.getText().toString()));
-                if(name.getText().length() == 0)
-                    name.setError(getString(R.string.missing_input,getString(R.string.missing_name)));
-                else if(link.getText().length() > 0 && !Patterns.WEB_URL.matcher(link.getText().toString()).matches()) {
-                    link.setError(getString(R.string.invalid_link));
-                }else {
-                    if(oldReward != null)
-                        modReward(name.getText(), price.getText(), link.getText(), notification.isChecked());
-                    else
-                        createReward(name.getText(), price.getText(), link.getText(), notification.isChecked());
-                }
-
+        fab.setOnClickListener(view -> {
+            link.setText(buildLink(link.getText().toString()));
+            if(name.getText().length() == 0)
+                name.setError(getString(R.string.missing_input,getString(R.string.missing_name)));
+            else if(link.getText().length() > 0 && !Patterns.WEB_URL.matcher(link.getText().toString()).matches()) {
+                link.setError(getString(R.string.invalid_link));
+            }else {
+                if(oldReward != null)
+                    modReward(name.getText(), price.getText(), link.getText(), notification.isChecked());
+                else
+                    createReward(name.getText(), price.getText(), link.getText(), notification.isChecked());
             }
+
         });
 
         if(oldReward != null){

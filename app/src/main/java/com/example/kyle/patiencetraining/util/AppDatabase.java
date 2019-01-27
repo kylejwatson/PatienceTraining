@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Reward.class,Score.class},version = 3)
+@Database(entities = {Reward.class,Score.class},version = 4)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract RewardDao rewardDao();
     public abstract ScoreDao scoreDao();
@@ -24,6 +24,13 @@ public abstract class AppDatabase extends RoomDatabase {
                     + " ADD COLUMN imageLink STRING");
         }
     };
+    private static final Migration MIGRATION_3_4 = new Migration(3,4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE reward "
+                    + " ADD COLUMN finished INTEGER DEFAULT 0 NOT NULL");
+        }
+    };
 
     private static AppDatabase sInstance;
 
@@ -31,7 +38,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if(sInstance == null)
             sInstance = Room.databaseBuilder(context,
                     AppDatabase.class,NAME_DATABASE)
-                    .addMigrations(MIGRATION_2_3)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                     .build();
         return sInstance;
     }

@@ -95,8 +95,13 @@ public class LockedFragment extends Fragment {
     }
 
     private void assignRewardToList(Reward reward){
+        if(reward.getFinish() <= new Date().getTime()){
+            reward.setFinished(true);
+            mainViewModel.update(reward);
+        }else {
             mLockedRewards.add(reward);
             setNotification(reward);
+        }
     }
 
     private void separateList(List<Reward> rewardList){
@@ -162,11 +167,6 @@ public class LockedFragment extends Fragment {
         componentName = new ComponentName(context, NotificationService.class);
 
         mainViewModel = new MainViewModel(context.getApplicationContext());
-        mainViewModel.getRewardsAfter(new Date().getTime()).observe(this, new Observer<List<Reward>>() {
-            @Override
-            public void onChanged(List<Reward> rewards) {
-                separateList(rewards);
-            }
-        });
+        mainViewModel.getRewardsAfter().observe(this, this::separateList);
     }
 }

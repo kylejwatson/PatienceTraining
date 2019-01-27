@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,12 +145,8 @@ public class UnlockedFragment extends Fragment {
         });
 
         mainViewModel = new MainViewModel(context.getApplicationContext());
-        mainViewModel.getRewardsBefore(new Date().getTime()).observe(this, new Observer<List<Reward>>() {
-            @Override
-            public void onChanged(List<Reward> rewards) {
-                separateList(rewards);
-            }
-        });
+
+        mainViewModel.getRewardsBefore().observe(this, this::separateList);
     }
 
     @Override

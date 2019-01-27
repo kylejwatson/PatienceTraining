@@ -12,53 +12,37 @@ import androidx.lifecycle.LiveData;
 
 public class RewardRepository {
 
-    private AppDatabase mAppDatabase;
     private RewardDao mRewardDao;
     private LiveData<List<Reward>> mRewards;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
 
-    public RewardRepository (Context context) {
-        mAppDatabase = AppDatabase.getInstance(context);
+    RewardRepository(Context context) {
+        AppDatabase mAppDatabase = AppDatabase.getInstance(context);
         mRewardDao = mAppDatabase.rewardDao();
         mRewards = mRewardDao.getAllRewards();
     }
 
-    public LiveData<List<Reward>> getAllRewards() {
+    LiveData<List<Reward>> getAllRewards() {
         return mRewards;
     }
 
-    public LiveData<List<Reward>> getRewardsBefore(long time) {
-        return mRewardDao.getRewardsBefore(time);
+    LiveData<List<Reward>> getRewardsBefore() {
+        return mRewardDao.getRewardsBefore();
     }
 
-    public LiveData<List<Reward>> getRewardsAfter(long time) {
-        return mRewardDao.getRewardsAfter(time);
+    LiveData<List<Reward>> getRewardsAfter() {
+        return mRewardDao.getRewardsAfter();
     }
 
     public void insert(final Reward reward) {
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                mRewardDao.insertRewards(reward);
-            }
-        });
+        mExecutor.execute(() -> mRewardDao.insertRewards(reward));
     }
 
     public void update(final Reward reward) {
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                mRewardDao.updateRewards(reward);
-            }
-        });
+        mExecutor.execute(() -> mRewardDao.updateRewards(reward));
     }
 
     public void delete(final Reward reward) {
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                mRewardDao.deleteRewards(reward);
-            }
-        });
+        mExecutor.execute(() -> mRewardDao.deleteRewards(reward));
     }
 }

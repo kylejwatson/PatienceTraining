@@ -1,11 +1,9 @@
 package com.example.kyle.patiencetraining.reward;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.bumptech.glide.Glide;
 import com.example.kyle.patiencetraining.util.UrlApiService;
 import com.example.kyle.patiencetraining.util.UrlImage;
 import com.example.kyle.patiencetraining.util.UrlInfo;
@@ -53,14 +51,13 @@ public class Reward implements Parcelable {
         this.imagePath = imagePath;
         this.notificationSet = notificationSet;
         notificationJobId = new Date(start).hashCode();
-
+        imageLink = "";
         if(imagePath.isEmpty() && !link.isEmpty()){
             requestData(link);
         }
     }
 
     private void requestData(String url){
-        imageLink = "";
         if(!url.isEmpty()) {
             UrlApiService service = UrlApiService.retrofit.create(UrlApiService.class);
 

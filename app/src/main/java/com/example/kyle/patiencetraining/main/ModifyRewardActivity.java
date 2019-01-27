@@ -282,7 +282,8 @@ public class ModifyRewardActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == GET_FROM_GALLERY ){
             if(resultCode == RESULT_OK){
-                setImageUri(data.getData(),getFileName(imageUri));
+                Uri uri = data.getData();
+                setImageUri(uri,getFileName(uri));
             }
         }else if(requestCode == GET_FROM_CAMERA){
             if(resultCode == RESULT_OK){

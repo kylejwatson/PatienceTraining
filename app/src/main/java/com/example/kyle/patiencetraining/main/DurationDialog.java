@@ -25,7 +25,7 @@ class DurationDialog extends Dialog {
     private final  TextView errorText;
     private final ImageView errorIcon;
     private final Button okButton;
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     DurationDialog(@NonNull Context context, String error, final OnDurationSetListener listener) {
         super(context);

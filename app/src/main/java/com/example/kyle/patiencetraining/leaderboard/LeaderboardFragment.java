@@ -204,6 +204,7 @@ public class LeaderboardFragment extends Fragment {
                         if (task.isSuccessful() && task.getResult() != null) {
                             user = task.getResult().toObject(User.class);
                             if(user != null) {
+                                user.userName = userName;
                                 addScore(uID);
                             }else{
                                 createUser(uID);
@@ -224,6 +225,9 @@ public class LeaderboardFragment extends Fragment {
                     error.setVisibility(View.GONE);
                     button.setVisibility(View.GONE);
                     String uID = data.getStringExtra(LoginActivity.UID_EXTRA);
+                    Context context = getContext();
+                    if(context != null)
+                        getUserName(context);
                     getCurrentUser(uID);
                 }
                 break;
@@ -238,19 +242,28 @@ public class LeaderboardFragment extends Fragment {
         }
     }
 
+    private void getUserName(Context context){
+        sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        userName = "";
+        userName = sharedPreferences.getString(getString(R.string.name_key), userName);
+        if(userName.isEmpty()) {
+            FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (fUser != null) {
+                userName = fUser.getDisplayName();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(getString(R.string.name_key), userName);
+                editor.apply();
+            }
+        }
+    }
+
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
         loginIntent = new Intent(context, LoginActivity.class);
         loginIntent.putExtra(LoginActivity.LOGIN_TASK_EXTRA, LoginActivity.LOGIN_TASK);
 
-        sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        userName = "";
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(fUser != null)
-            userName = fUser.getDisplayName();
-
-        userName = sharedPreferences.getString(getString(R.string.name_key), userName);
+        getUserName(context);
     }
 
     @Override

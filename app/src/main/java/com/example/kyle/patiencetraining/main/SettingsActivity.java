@@ -43,10 +43,10 @@ public class SettingsActivity extends AppCompatActivity {
         delete = findViewById(R.id.deleteSwitch);
         delete.setChecked(deleteConfirm);
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        String username = "username";
-        if(fUser != null)
-            username = fUser.getDisplayName();
+        String username = "";
         String displayName = sharedPref.getString(getString(R.string.name_key), username);
+        if(fUser != null && displayName.isEmpty())
+            displayName = fUser.getDisplayName();
         name = findViewById(R.id.nameEditText);
         name.setText(displayName);
     }

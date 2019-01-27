@@ -21,11 +21,8 @@ public class ScoreAsyncTask extends AsyncTask<Score, Void, List<Score>> {
 
     public ScoreAsyncTask(Context context, int task){
         this.task = task;
-        this.listener = new OnPostExecuteListener() {
-            @Override
-            public void onPostExecute(List<Score> list) {
-                //
-            }
+        this.listener = list -> {
+            //
         };
         sDatabase = AppDatabase.getInstance(context);
     }

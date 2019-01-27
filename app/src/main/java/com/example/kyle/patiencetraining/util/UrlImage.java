@@ -23,12 +23,7 @@ public class UrlImage {
     public UrlImage() {
     }
 
-    /**
-     *
-     * @param src
-     * @param type
-     * @param size
-     */
+
     public UrlImage(String src, List<Integer> size, String type) {
         super();
         this.src = src;

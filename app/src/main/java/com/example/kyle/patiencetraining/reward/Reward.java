@@ -11,6 +11,7 @@ import com.example.kyle.patiencetraining.util.UrlInfo;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -68,7 +69,7 @@ public class Reward implements Parcelable {
 
             call.enqueue(new Callback<UrlInfo>() {
                 @Override
-                public void onResponse(Call<UrlInfo> call, Response<UrlInfo> response) {
+                public void onResponse(@NonNull Call<UrlInfo> call, @NonNull Response<UrlInfo> response) {
                     UrlInfo info = response.body();
                     if (info != null) {
                         List<UrlImage> images = info.getUrlImages();
@@ -79,7 +80,7 @@ public class Reward implements Parcelable {
                 }
 
                 @Override
-                public void onFailure(Call<UrlInfo> call, Throwable t) {
+                public void onFailure(@NonNull Call<UrlInfo> call, @NonNull Throwable t) {
                     Log.d("error", t.toString());
                 }
             });
@@ -158,11 +159,11 @@ public class Reward implements Parcelable {
         this.link = link;
     }
 
-    public String getImageLink() {
+    String getImageLink() {
         return imageLink;
     }
 
-    public void setImageLink(String imageLink) {
+    void setImageLink(String imageLink) {
         this.imageLink = imageLink;
     }
 
@@ -206,7 +207,7 @@ public class Reward implements Parcelable {
         return notificationJobId;
     }
 
-    public void setNotificationJobId(int notificationJobId) {
+    void setNotificationJobId(int notificationJobId) {
         this.notificationJobId = notificationJobId;
     }
 

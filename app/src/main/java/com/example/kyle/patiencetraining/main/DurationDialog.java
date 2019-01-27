@@ -49,64 +49,44 @@ class DurationDialog extends Dialog {
             secondPicker.setVisibility(View.VISIBLE);
             secondPicker.setMaxValue(60);
             secondPicker.setValue(1);
-            secondPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    seconds = i1;
-                    checkError();
-                }
+            secondPicker.setOnValueChangedListener((numberPicker, i, i1) -> {
+                seconds = i1;
+                checkError();
             });
         }
 
-        hourPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
-                hours = newVal;
-                if(oldVal == 23 && newVal == 0)
-                    dayPicker.setValue(++days);
-                else if(oldVal == 0 && newVal == 23 && days > 0)
-                    dayPicker.setValue(--days);
-                checkError();
-            }
+        hourPicker.setOnValueChangedListener((numberPicker, oldVal, newVal) -> {
+            hours = newVal;
+            if(oldVal == 23 && newVal == 0)
+                dayPicker.setValue(++days);
+            else if(oldVal == 0 && newVal == 23 && days > 0)
+                dayPicker.setValue(--days);
+            checkError();
         });
 
-        dayPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
-                days = newVal;
-                if(oldVal == 6 && newVal == 0)
-                    weekPicker.setValue(++weeks);
-                else if(oldVal == 0 && newVal == 23 && weeks > 0)
-                    weekPicker.setValue(--weeks);
-                checkError();
-            }
+        dayPicker.setOnValueChangedListener((numberPicker, oldVal, newVal) -> {
+            days = newVal;
+            if(oldVal == 6 && newVal == 0)
+                weekPicker.setValue(++weeks);
+            else if(oldVal == 0 && newVal == 23 && weeks > 0)
+                weekPicker.setValue(--weeks);
+            checkError();
         });
 
-        weekPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
-                weeks = newVal;
-                checkError();
-            }
+        weekPicker.setOnValueChangedListener((numberPicker, oldVal, newVal) -> {
+            weeks = newVal;
+            checkError();
         });
 
         Button cancelButton = findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        cancelButton.setOnClickListener(view -> dismiss());
         okButton = findViewById(R.id.okButton);
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hours = hourPicker.getValue();
-                days = dayPicker.getValue();
-                weeks = weekPicker.getValue();
-                listener.onDurationSet(hours, days, weeks, seconds);
-                dismiss();
-            }
+        okButton.setOnClickListener(view -> {
+            hours = hourPicker.getValue();
+            days = dayPicker.getValue();
+            weeks = weekPicker.getValue();
+            listener.onDurationSet(hours, days, weeks, seconds);
+            dismiss();
         });
     }
 

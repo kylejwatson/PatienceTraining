@@ -86,8 +86,7 @@ public class NotificationService extends JobService{
 
     private Uri getNotificationSound(){
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
-        Uri notificationUri = Uri.parse(sharedPref.getString(getString(R.string.notification_uri_key),""));
-        return notificationUri;
+        return Uri.parse(sharedPref.getString(getString(R.string.notification_uri_key),""));
     }
 
     private void createNotificationChannel() {

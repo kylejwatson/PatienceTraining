@@ -4,7 +4,6 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,12 +48,7 @@ public class LockedFragment extends Fragment {
     private TextView emptyTextView;
     private MainViewModel mainViewModel;
 
-    private LockedClickedReward.OnEditListener editListener = new LockedClickedReward.OnEditListener() {
-        @Override
-        public void onEdit(int position) {
-            editReward(position);
-        }
-    };
+    private LockedClickedReward.OnEditListener editListener = this::editReward;
 
     public LockedFragment() {
         // Required empty public constructor
@@ -131,35 +124,21 @@ public class LockedFragment extends Fragment {
 
         deleteWarning = new AlertDialog.Builder(context)
                 .setTitle(R.string.delete_confirmation).setCancelable(true).setIcon(R.drawable.ic_warning)
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //Do nothing
-                    }
+                .setNegativeButton(android.R.string.no, (dialogInterface, i) -> {
+                    //Do nothing
                 });
 
-        mLockedAdapter = new LockedAdapter(mLockedRewards, new LockedViewHolder.LockedClickListener() {
-            @Override
-            public void rewardOnClick(int i) {
-                ClickedRewardDialog dialog = new LockedClickedReward(context, mLockedRewards.get(i), i, new ClickedRewardDialog.OnDeleteListener() {
-                    @Override
-                    public void onDelete(final int position) {
-                        SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-                        Boolean deleteConfirm = sharedPreferences.getBoolean(getString(R.string.delete_key), true);
-                        if(deleteConfirm) {
-                            deleteWarning.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    mainViewModel.delete(mLockedRewards.get(position));
-                                }
-                            }).show();
-                        }else{
-                            mainViewModel.delete(mLockedRewards.get(position));
-                        }
-                    }
-                },editListener);
-                dialog.show();
-            }
+        mLockedAdapter = new LockedAdapter(mLockedRewards, i -> {
+            ClickedRewardDialog dialog = new LockedClickedReward(context, mLockedRewards.get(i), i, position -> {
+                SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                Boolean deleteConfirm = sharedPreferences.getBoolean(getString(R.string.delete_key), true);
+                if(deleteConfirm) {
+                    deleteWarning.setPositiveButton(android.R.string.yes, (dialogInterface, i1) -> mainViewModel.delete(mLockedRewards.get(position))).show();
+                }else{
+                    mainViewModel.delete(mLockedRewards.get(position));
+                }
+            },editListener);
+            dialog.show();
         });
 
         jobScheduler = (JobScheduler) context.getSystemService(JOB_SCHEDULER_SERVICE);

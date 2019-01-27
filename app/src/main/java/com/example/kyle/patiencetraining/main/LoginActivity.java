@@ -1,6 +1,5 @@
 package com.example.kyle.patiencetraining.main;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,10 +13,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -96,30 +93,25 @@ public class LoginActivity extends AppCompatActivity {
         progressTextView.setText(R.string.auth_serv);
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressTextView.setText(R.string.success);
-                            // Sign in success, update UI with the signed-in user's information
-                            Intent intent = new Intent();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if(user == null){
-                                setResult(RESULT_CANCELED);
-                                progressTextView.setText(R.string.serv_error);
-                            }else {
-                                intent.putExtra(UID_EXTRA, user.getUid());
-                                setResult(RESULT_OK, intent);
-                            }
-//
-//                            firestoreDB(user != null ? user.getUid() : "");
-                        } else {
-                            // If sign in fails, display a message to the user.
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        progressTextView.setText(R.string.success);
+                        // Sign in success, update UI with the signed-in user's information
+                        Intent intent = new Intent();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if(user == null){
                             setResult(RESULT_CANCELED);
                             progressTextView.setText(R.string.serv_error);
+                        }else {
+                            intent.putExtra(UID_EXTRA, user.getUid());
+                            setResult(RESULT_OK, intent);
                         }
-                        finish();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        setResult(RESULT_CANCELED);
+                        progressTextView.setText(R.string.serv_error);
                     }
+                    finish();
                 });
     }
 

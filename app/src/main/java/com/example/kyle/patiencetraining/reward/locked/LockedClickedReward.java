@@ -31,12 +31,9 @@ class LockedClickedReward extends ClickedRewardDialog {
         textView.setText(description);
         Button editButton = findViewById(R.id.editButton);
         editButton.setVisibility(View.VISIBLE);
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editListener.onEdit(position);
-                dismiss();
-            }
+        editButton.setOnClickListener(view -> {
+            editListener.onEdit(position);
+            dismiss();
         });
     }
 

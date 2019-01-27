@@ -32,15 +32,6 @@ public class UrlInfo {
     public UrlInfo() {
     }
 
-    /**
-     *
-     * @param title
-     * @param favicon
-     * @param description
-     * @param videos
-     * @param images
-     * @param url
-     */
     public UrlInfo(String url, String favicon, String title, String description, List<UrlImage> images, List<Object> videos) {
         super();
         this.url = url;

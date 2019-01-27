@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.kyle.patiencetraining.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,12 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
         notificationTone = findViewById(R.id.notificationLabel);
         notificationTone.setText(notificationName);
         Button notifButton = findViewById(R.id.notificationSound);
-        notifButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchNotificationIntent();
-            }
-        });
+        notifButton.setOnClickListener(view -> launchNotificationIntent());
     }
 
     private void launchNotificationIntent(){

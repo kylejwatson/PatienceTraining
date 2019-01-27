@@ -13,18 +13,18 @@ import androidx.lifecycle.LiveData;
 public class RewardRepository {
 
     private RewardDao mRewardDao;
-    private LiveData<List<Reward>> mRewards;
+//    private LiveData<List<Reward>> mRewards;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     RewardRepository(Context context) {
         AppDatabase mAppDatabase = AppDatabase.getInstance(context);
         mRewardDao = mAppDatabase.rewardDao();
-        mRewards = mRewardDao.getAllRewards();
+//        mRewards = mRewardDao.getAllRewards();
     }
 
-    LiveData<List<Reward>> getAllRewards() {
-        return mRewards;
-    }
+//    LiveData<List<Reward>> getAllRewards() {
+//        return mRewards;
+//    }
 
     LiveData<List<Reward>> getRewardsBefore() {
         return mRewardDao.getRewardsBefore();

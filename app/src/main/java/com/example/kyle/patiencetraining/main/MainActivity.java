@@ -1,9 +1,7 @@
 package com.example.kyle.patiencetraining.main;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.kyle.patiencetraining.reward.MainViewModel;
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity{
 
         mainViewModel = new MainViewModel(getApplicationContext());
         Handler handler = new Handler();
-        int delay = 10000;
+        int delay = 60000;
         handler.postDelayed(new Runnable(){
             public void run(){
                 Executor executor = Executors.newSingleThreadExecutor();

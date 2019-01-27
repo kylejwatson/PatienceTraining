@@ -27,16 +27,13 @@ class UnlockedClickedReward extends ClickedRewardDialog {
         String description = context.getString(R.string.waited_unlocked, time, reward.getName(), reward.getPrice());
         textView.setText(description);
         button.setText(R.string.collect_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!reward.getLink().isEmpty()) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reward.getLink()));
-                    context.startActivity(browserIntent);
-                }
-                dismiss();
-                deleteListener.onDelete(position);
+        button.setOnClickListener(view -> {
+            if(!reward.getLink().isEmpty()) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(reward.getLink()));
+                context.startActivity(browserIntent);
             }
+            dismiss();
+            deleteListener.onDelete(position);
         });
 
     }

@@ -11,8 +11,8 @@ import androidx.room.Update;
 
 @Dao
 public interface ScoreDao {
-    @Query("SELECT * FROM score")
-    List<Score> getAllScores();
+//    @Query("SELECT * FROM score")
+//    List<Score> getAllScores();
 
     @Query("SELECT * FROM score WHERE uploaded = 0")
     List<Score> getLocalScores();

@@ -24,21 +24,14 @@ import com.example.kyle.patiencetraining.util.ScoreAsyncTask;
 import com.example.kyle.patiencetraining.util.TimeString;
 import com.example.kyle.patiencetraining.util.User;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 public class LeaderboardFragment extends Fragment {
 
@@ -84,12 +77,7 @@ public class LeaderboardFragment extends Fragment {
 
         error = view.findViewById(R.id.signInError);
         button = view.findViewById(R.id.sign_in_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(loginIntent, LoginActivity.LOGIN_TASK);
-            }
-        });
+        button.setOnClickListener(view1 -> startActivityForResult(loginIntent, LoginActivity.LOGIN_TASK));
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         if(mAuth.getCurrentUser() != null){
@@ -109,23 +97,20 @@ public class LeaderboardFragment extends Fragment {
                 .orderBy("rank", Query.Direction.ASCENDING)
                 .whereGreaterThanOrEqualTo("rank",rank-RANGE)
                 .whereLessThanOrEqualTo("rank", rank+RANGE)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if(queryDocumentSnapshots != null) {
-                            List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
-                            mUsers.clear();
-                            for (DocumentSnapshot document : snapshots) {
-                                User tempUser = document.toObject(User.class);
-                                assert tempUser != null;
-                                if (tempUser.userName == null)
-                                    tempUser.userName = document.getId();
-                                mUsers.add(tempUser);
-                            }
-                            recyclerView.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            adapter.notifyDataSetChanged();
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if(queryDocumentSnapshots != null) {
+                        List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
+                        mUsers.clear();
+                        for (DocumentSnapshot document : snapshots) {
+                            User tempUser = document.toObject(User.class);
+                            assert tempUser != null;
+                            if (tempUser.userName == null)
+                                tempUser.userName = document.getId();
+                            mUsers.add(tempUser);
                         }
+                        recyclerView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        adapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -138,55 +123,46 @@ public class LeaderboardFragment extends Fragment {
     }
 
     private void addScore(final String uID){
-        new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_GET_ALL_SCORES, new ScoreAsyncTask.OnPostExecuteListener() {
-            @Override
-            public void onPostExecute(final List<Score> list) {
-                long millis = 0;
-                for (Score score:list) {
-                    millis += score.getTime();
-                }
-                user.totalTime += millis;
-                final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("users").document(uID).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Score[] scoreList = new Score[list.size()];
-                            for (int i = 0; i < scoreList.length; i++) {
-                                scoreList[i] = list.get(i);
-                                scoreList[i].setUploaded(1);
-                            }
-
-                            new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_UPDATE_SCORE).execute(scoreList);
-                            yourScore.setVisibility(View.VISIBLE);
-                            if(getContext() != null) {
-                                String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
-                                yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
-                            }
-                            setCurrentUserListener(uID);
-                            getOtherUsers(user.rank);
-                        }
-                    }
-                });
+        new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_GET_ALL_SCORES, list -> {
+            long millis = 0;
+            for (Score score:list) {
+                millis += score.getTime();
             }
+            user.totalTime += millis;
+            final FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(uID).set(user).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Score[] scoreList = new Score[list.size()];
+                    for (int i = 0; i < scoreList.length; i++) {
+                        scoreList[i] = list.get(i);
+                        scoreList[i].setUploaded(1);
+                    }
+
+                    new ScoreAsyncTask(getContext(), ScoreAsyncTask.TASK_UPDATE_SCORE).execute(scoreList);
+                    yourScore.setVisibility(View.VISIBLE);
+                    if(getContext() != null) {
+                        String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
+                        yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
+                    }
+                    setCurrentUserListener(uID);
+                    getOtherUsers(user.rank);
+                }
+            });
         }).execute();
     }
 
     private void setCurrentUserListener(final String uID){
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(uID)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        if(documentSnapshot != null) {
-                            user = documentSnapshot.toObject(User.class);
-                            if (user != null) {
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString(getString(R.string.name_key), user.userName);
-                                editor.apply();
-                                String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
-                                yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
-                            }
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if(documentSnapshot != null) {
+                        user = documentSnapshot.toObject(User.class);
+                        if (user != null) {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(getString(R.string.name_key), user.userName);
+                            editor.apply();
+                            String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
+                            yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
                         }
                     }
                 });
@@ -198,20 +174,17 @@ public class LeaderboardFragment extends Fragment {
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(uID).get().addOnCompleteListener(
-                new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            user = task.getResult().toObject(User.class);
-                            if(user != null) {
-                                user.userName = userName;
-                                addScore(uID);
-                            }else{
-                                createUser(uID);
-                            }
+                task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        user = task.getResult().toObject(User.class);
+                        if(user != null) {
+                            user.userName = userName;
+                            addScore(uID);
                         }else{
                             createUser(uID);
                         }
+                    }else{
+                        createUser(uID);
                     }
                 }
         );

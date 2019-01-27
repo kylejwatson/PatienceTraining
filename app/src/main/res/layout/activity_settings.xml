@@ -68,4 +68,36 @@
         app:layout_constraintTop_toBottomOf="@id/nameLabel"
         android:importantForAutofill="no"
         android:inputType="text" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/notificationImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/notificationSound"
+        app:layout_constraintBottom_toBottomOf="@id/notificationSound"
+        app:srcCompat="@drawable/ic_notification" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/notificationSound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintStart_toEndOf="@id/notificationImageView"
+        app:layout_constraintTop_toBottomOf="@id/nameEditText"
+        android:text="@string/notification_tone_label"
+        />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/notificationLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintStart_toEndOf="@id/notificationSound"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/notificationSound"
+        app:layout_constraintTop_toTopOf="@id/notificationSound"
+        android:labelFor="@id/notificationSound"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

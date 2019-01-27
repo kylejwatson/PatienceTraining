@@ -5,7 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 
 import com.example.kyle.patiencetraining.reward.locked.LockedFragment;
@@ -17,6 +20,12 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 
 public class NotificationService extends JobService {
+
+    /**
+     * Add sound
+     * Add collect reward option
+     *
+     */
 
     private static final String CHANNEL_ID = "REWARD_CHANNEL";
     public static final String REWARD_ID_EXTRA = "reward_id_extra";
@@ -43,13 +52,21 @@ public class NotificationService extends JobService {
                 .setContentText(getString(R.string.notification_text, name))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(resultPendingIntent)
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setSound(getNotificationSound());
         createNotificationChannel();
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(notificationId, mBuilder.build());
         return false;
+    }
+
+    private Uri getNotificationSound(){
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        Uri notificationUri = Uri.parse(sharedPref.getString(getString(R.string.notification_uri_key),""));
+        return notificationUri;
     }
 
     private void createNotificationChannel() {

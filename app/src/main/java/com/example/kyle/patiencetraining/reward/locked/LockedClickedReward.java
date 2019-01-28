@@ -21,11 +21,11 @@ class LockedClickedReward extends ClickedRewardDialog {
 
         TextView textView = findViewById(R.id.descriptionTextView);
         Button button = findViewById(R.id.collectButton);
-        Date start = new Date(reward.getStart());
-        Date finish = new Date(reward.getStart());
-        String totalTime = TimeString.getTimeStringBetween(start, finish, context);
-        String time = TimeString.getTimeStringBetween(start, new Date(), context);
-        String description = context.getString(R.string.waited_locked, time, totalTime, reward.getName());
+        double totalTime = reward.getFinish() - reward.getStart();
+        double timeTilFinish = reward.getFinish() - new Date().getTime();
+
+        double percentageComplete = 100*(1d - (timeTilFinish/totalTime)) ;
+        String description = context.getString(R.string.waited_locked, reward.getName(), (int)percentageComplete);
         button.setText(R.string.wait_button);
         button.setEnabled(false);
         textView.setText(description);

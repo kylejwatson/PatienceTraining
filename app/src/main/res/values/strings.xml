@@ -6,7 +6,7 @@
 
     <!-- Start of time strings -->
     <string name="countdown">
-        For <xliff:g example="5 days" id="time">%s</xliff:g>
+        Until <xliff:g example="6th July" id="date">%s</xliff:g>
     </string>
     <string name="duration">
         <xliff:g example="5" id="hours">%d</xliff:g> hours, <xliff:g example="0" id="timeQual">%d</xliff:g> days, <xliff:g example="62" id="timeQual">%d</xliff:g> weeks
@@ -34,9 +34,7 @@
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <!-- Start of click dialog locked strings -->
-    <string name="waited_locked">You have waited: <xliff:g example="5 days" id="time">%s</xliff:g>
-        out of <xliff:g example="5 days" id="time">%s</xliff:g> to
-        <xliff:g example="buy a new phone" id="rewardName">%s</xliff:g></string>
+    <string name="waited_locked">Your reward, %1$s, is %%%2$d complete.</string>
     <string name="wait_button">Wait for your reward!</string>
     <!-- End of click dialog locked strings -->
 

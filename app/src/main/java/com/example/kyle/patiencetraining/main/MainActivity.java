@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity{
      *
      * Todo: add timeline to each reward
      *
-
-     * Todo: Make activities/layouts for each option
      * Todo: Start theming/dimens sorting
      */
 

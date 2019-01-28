@@ -3,6 +3,8 @@ package com.example.kyle.patiencetraining.reward.locked;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.reward.Reward;
 import com.example.kyle.patiencetraining.util.TimeString;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -39,8 +42,17 @@ public class LockedAdapter extends RecyclerView.Adapter<LockedViewHolder> {
         Reward reward = mRewards.get(i);
 
         lockedViewHolder.nameTextView.setText(reward.getName());
-        Date date = new Date(reward.getFinish());
-        String timeString = TimeString.getTimeStringBetween(new Date(), date, mContext);
+        Date nowDate = new Date();
+        Date finishDate = new Date(reward.getFinish());
+
+        double totalTime = reward.getFinish() - reward.getStart();
+        double timeTilFinish = reward.getFinish() - nowDate.getTime();
+
+        double percentageComplete = (1d - (timeTilFinish/totalTime)) ;
+
+        lockedViewHolder.progressBar.setProgress((int)(percentageComplete*100));
+
+        String timeString = DateFormat.getDateInstance(DateFormat.SHORT).format(finishDate);
         String time = mContext.getString(R.string.countdown,timeString);
         lockedViewHolder.timeTextView.setText(time);
     }

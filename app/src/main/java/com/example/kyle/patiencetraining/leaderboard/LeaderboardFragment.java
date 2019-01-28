@@ -37,6 +37,7 @@ public class LeaderboardFragment extends Fragment {
 
     /**
      * TODO: add load more buttons for top and bottom ranges
+     * TODO: change life cycle so if there is no user in the database it will ask you to create one
      */
 
     private Intent loginIntent;
@@ -158,11 +159,15 @@ public class LeaderboardFragment extends Fragment {
                     if(documentSnapshot != null) {
                         user = documentSnapshot.toObject(User.class);
                         if (user != null) {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString(getString(R.string.name_key), user.userName);
-                            editor.apply();
-                            String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
-                            yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
+                            Context context = getContext();
+                            if(context != null) {
+                                sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString(getString(R.string.name_key), user.userName);
+                                editor.apply();
+                                String timeString = TimeString.getTimeFromLong(user.totalTime, getContext());
+                                yourScore.setText(getString(R.string.user_score, user.rank, user.userName, timeString));
+                            }
                         }
                     }
                 });

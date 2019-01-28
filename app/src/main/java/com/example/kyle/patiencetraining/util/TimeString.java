@@ -31,9 +31,9 @@ public abstract class TimeString {
 
         long months = Months.monthsBetween(fromDateTime, toDateTime).getMonths();
         long years = months/12;
-        int weeks = 0;
-        int days = 0;
-        int hours = 0;
+        double weeks = 0;
+        double days = 0;
+        double hours = 0;
 
         if(months == 0) {
             weeks = Weeks.weeksBetween(fromDateTime, toDateTime).getWeeks();
@@ -41,20 +41,20 @@ public abstract class TimeString {
             hours = Hours.hoursBetween(fromDateTime, toDateTime).getHours();
         }
 
-        float quantifier;
+        double quantifier;
         int qualifier;
         if (years > 0) {
             qualifier = R.string.year;
-            quantifier = (float) months / 12;
+            quantifier = months / 12d;
         } else if (months > 0) {
             qualifier = R.string.month;
-            quantifier = (float) weeks / 4;
+            quantifier = weeks / 4d;
         } else if (weeks > 0) {
             qualifier = R.string.week;
-            quantifier = (float) days / 7;
+            quantifier = days / 7d;
         } else{
             qualifier = R.string.day;
-            quantifier = (float) hours / 24;
+            quantifier = hours / 24d;
         }
 
         String qString = context.getString(qualifier);

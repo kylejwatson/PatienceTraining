@@ -22,9 +22,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    /** Todo: make settings menu get all options needed
-     *       - pre-emptive notification
-     *       **/
+    /**
+     * Todo:  pre-emptive notification (not needed for release)
+     *
+     **/
 
 
     private SharedPreferences sharedPref;

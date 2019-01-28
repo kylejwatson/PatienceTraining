@@ -21,7 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE reward "
-                    + " ADD COLUMN imageLink STRING");
+                    + " ADD COLUMN imageLink TEXT");
         }
     };
     private static final Migration MIGRATION_3_4 = new Migration(3,4) {

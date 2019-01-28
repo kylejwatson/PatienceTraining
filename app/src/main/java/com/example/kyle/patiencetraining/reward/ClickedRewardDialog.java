@@ -33,6 +33,10 @@ public abstract class ClickedRewardDialog extends Dialog {
         imageView.setImageURI(null);
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         Boolean dataSaved = sharedPreferences.getBoolean(context.getString(R.string.data_saver_key),false);
+        if(reward.getImageLink() == null)
+            reward.setImageLink("");
+        if(reward.getImagePath() == null)
+            reward.setImagePath("");
         if(!dataSaved && reward.getImagePath().isEmpty() && !reward.getImageLink().isEmpty()){
             Glide.with(context).load(reward.getImageLink()).into(imageView);
         }else if(!reward.getImagePath().isEmpty()){

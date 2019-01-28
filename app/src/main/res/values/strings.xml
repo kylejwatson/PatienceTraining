@@ -34,7 +34,7 @@
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <!-- Start of click dialog locked strings -->
-    <string name="waited_locked">Your reward, %1$s, is %%%2$d complete.</string>
+    <string name="waited_locked">Your reward, %1$s, is %2$d%% complete.</string>
     <string name="wait_button">Wait for your reward!</string>
     <!-- End of click dialog locked strings -->
 

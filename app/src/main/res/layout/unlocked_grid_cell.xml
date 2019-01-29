@@ -4,35 +4,85 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:background="@drawable/border"
     tools:layout_editor_absoluteY="25dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/nameUCellTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/goImageView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toStartOf="@id/dateUCellTextView"
+        app:layout_constraintStart_toEndOf="@id/UCellCardView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Buy a new phone!" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/goImageView"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/timeUCellTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toStartOf="@id/dateUCellTextView"
+        app:layout_constraintStart_toEndOf="@id/UCellCardView"
+        app:layout_constraintTop_toBottomOf="@id/nameUCellTextView"
+        tools:text="10.2 Days" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dateUCellTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="16dp"
+        style="@style/TextAppearance.MaterialComponents.Caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_go" />
+        tools:text="31/04/19" />
+
+    <!--<androidx.appcompat.widget.AppCompatImageView-->
+        <!--android:id="@+id/UCellImageView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_margin="8dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--/>-->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/UCellCardView"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_margin="16dp"
+        android:elevation="12dp"
+        app:cardCornerRadius="26dp"
+        android:layout_centerHorizontal="true"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/UCellImageView"
+            android:layout_height="80dp"
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary">
+        </androidx.appcompat.widget.AppCompatImageView>
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:id="@+id/UCellDivider"
+        android:layout_height="1dp"
+        android:layout_width="0dp"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/timeUCellTextView"
+        app:layout_constraintStart_toEndOf="@id/UCellCardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/divider" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

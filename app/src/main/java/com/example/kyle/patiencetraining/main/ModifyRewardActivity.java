@@ -8,17 +8,26 @@ import android.os.Bundle;
 
 import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.reward.Reward;
+import com.example.kyle.patiencetraining.util.AppDatabase;
+import com.example.kyle.patiencetraining.util.UrlApiService;
+import com.example.kyle.patiencetraining.util.UrlImage;
+import com.example.kyle.patiencetraining.util.UrlInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.Editable;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +40,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ModifyRewardActivity extends AppCompatActivity {
     private Uri imageUri;

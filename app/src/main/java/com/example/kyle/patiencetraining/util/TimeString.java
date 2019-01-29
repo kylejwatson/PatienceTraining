@@ -35,11 +35,9 @@ public abstract class TimeString {
         double days = 0;
         double hours = 0;
 
-        if(months == 0) {
-            weeks = Weeks.weeksBetween(fromDateTime, toDateTime).getWeeks();
-            days = Days.daysBetween(fromDateTime, toDateTime).getDays();
-            hours = Hours.hoursBetween(fromDateTime, toDateTime).getHours();
-        }
+        weeks = Weeks.weeksBetween(fromDateTime, toDateTime).getWeeks();
+        days = Days.daysBetween(fromDateTime, toDateTime).getDays();
+        hours = Hours.hoursBetween(fromDateTime, toDateTime).getHours();
 
         double quantifier;
         int qualifier;

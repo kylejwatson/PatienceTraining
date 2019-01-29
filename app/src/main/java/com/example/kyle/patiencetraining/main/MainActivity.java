@@ -11,15 +11,23 @@ import com.example.kyle.patiencetraining.R;
 import com.example.kyle.patiencetraining.reward.Reward;
 import com.example.kyle.patiencetraining.util.AppDatabase;
 import com.example.kyle.patiencetraining.util.NotificationService;
+import com.example.kyle.patiencetraining.util.UrlApiService;
+import com.example.kyle.patiencetraining.util.UrlImage;
+import com.example.kyle.patiencetraining.util.UrlInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.os.Handler;
 import android.view.Menu;
@@ -33,8 +41,6 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity{
 
     /**
-     *
-     * Todo: add timeline to each reward
      *
      * Todo: Start theming/dimens sorting
      */
@@ -119,6 +125,40 @@ public class MainActivity extends AppCompatActivity{
         startActivityForResult(signInIntent, LoginActivity.LOGIN_TASK);
     }
 
+
+    private void requestData(Reward reward, boolean exists){
+        if(!reward.getLink().isEmpty()) {
+            UrlApiService service = UrlApiService.retrofit.create(UrlApiService.class);
+
+            Call<UrlInfo> call = service.getUrlInfo(reward.getLink());
+
+            call.enqueue(new Callback<UrlInfo>() {
+                @Override
+                public void onResponse(@NonNull Call<UrlInfo> call, @NonNull Response<UrlInfo> response) {
+                    UrlInfo info = response.body();
+                    if (info != null) {
+                        List<UrlImage> images = info.getUrlImages();
+                        if (!images.isEmpty()) {
+                            reward.setImageLink(images.get(0).getSrc());
+                        }
+                    }
+                    if(exists)
+                        mainViewModel.update(reward);
+                    else
+                        mainViewModel.insert(reward);
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<UrlInfo> call, @NonNull Throwable t) {
+                    if(exists)
+                        mainViewModel.update(reward);
+                    else
+                        mainViewModel.insert(reward);
+                }
+            });
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         List<Fragment> frags = getSupportFragmentManager().getFragments();
@@ -130,11 +170,11 @@ public class MainActivity extends AppCompatActivity{
         switch (requestCode){
             case ADD_REQUEST:
                 if(resultCode == RESULT_OK)
-                    mainViewModel.insert(data.getParcelableExtra(REWARD_EXTRA));
+                    requestData(data.getParcelableExtra(REWARD_EXTRA), false);
                 break;
             case LockedFragment.MOD_REQUEST:
                 if(resultCode == Activity.RESULT_OK)
-                    mainViewModel.update(data.getParcelableExtra(MainActivity.REWARD_EXTRA));
+                    requestData(data.getParcelableExtra(REWARD_EXTRA), true);
                 break;
             case LoginActivity.LOGIN_TASK:
                 if(resultCode == Activity.RESULT_OK){

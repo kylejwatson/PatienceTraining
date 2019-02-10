@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:contentDescription="@string/gallery_icon_description"
         app:layout_constraintBottom_toBottomOf="@+id/galleryButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/galleryButton"
-        app:srcCompat="@drawable/ic_gallery"
-        android:contentDescription="@string/gallery_icon_description" />
+        app:srcCompat="@drawable/ic_gallery" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:contentDescription="@string/camera_icon_description"
         app:layout_constraintBottom_toBottomOf="@+id/cameraButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cameraButton"
-        app:srcCompat="@drawable/ic_camera"
-        android:contentDescription="@string/camera_icon_description" />
+        app:srcCompat="@drawable/ic_camera" />
 
     <Button
         android:id="@+id/galleryButton"
@@ -33,19 +33,25 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:paddingLeft="32dp"
         android:text="@string/gallery_button"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        android:textAlignment="textStart"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/cameraButton"
         style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingLeft="32dp"
         android:text="@string/camera_button"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        android:textAlignment="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/galleryButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

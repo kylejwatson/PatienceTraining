@@ -10,38 +10,40 @@
         android:id="@+id/signInError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:text="@string/signin_required"
-        android:layout_margin="8dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signInError" />
 
     <TextView
         android:id="@+id/yourScore"
+        style="@style/TextAppearance.MaterialComponents.Headline4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
+        android:text="@string/your_score"
         android:visibility="invisible"
-        style="@style/TextAppearance.MaterialComponents.Headline4"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/your_score"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/leaderRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
+        android:layout_margin="0dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,12 +54,12 @@
     <ProgressBar
         android:id="@+id/leaderProgressBar"
         style="@android:style/Widget.Material.ProgressBar.Large"
-        android:visibility="invisible"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/leaderRecyclerView"
         app:layout_constraintEnd_toEndOf="@id/leaderRecyclerView"
         app:layout_constraintStart_toStartOf="@id/leaderRecyclerView"
-        app:layout_constraintTop_toTopOf="@id/leaderRecyclerView"/>
+        app:layout_constraintTop_toTopOf="@id/leaderRecyclerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

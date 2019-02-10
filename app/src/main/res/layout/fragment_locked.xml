@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="8dp"
     tools:context=".reward.locked.LockedFragment">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -20,20 +21,20 @@
         android:id="@+id/lockedRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clockImageView"
-        tools:listitem="@layout/locked_grid_cell"/>
+        tools:listitem="@layout/locked_grid_cell" />
 
     <TextView
         android:id="@+id/emptyLockedTextView"
-        android:visibility="invisible"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:text="@string/empty_locked"
+        android:textAlignment="center"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/lockedRecyclerView"
         app:layout_constraintEnd_toEndOf="@id/lockedRecyclerView"
         app:layout_constraintStart_toStartOf="@id/lockedRecyclerView"

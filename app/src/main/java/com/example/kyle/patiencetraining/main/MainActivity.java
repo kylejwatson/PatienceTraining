@@ -125,6 +125,13 @@ public class MainActivity extends AppCompatActivity{
         startActivityForResult(signInIntent, LoginActivity.LOGIN_TASK);
     }
 
+    private void updateOrInsert(Reward reward, boolean exists){
+        if(exists)
+            mainViewModel.update(reward);
+        else
+            mainViewModel.insert(reward);
+    }
+
 
     private void requestData(Reward reward, boolean exists){
         if(!reward.getLink().isEmpty()) {
@@ -142,20 +149,16 @@ public class MainActivity extends AppCompatActivity{
                             reward.setImageLink(images.get(0).getSrc());
                         }
                     }
-                    if(exists)
-                        mainViewModel.update(reward);
-                    else
-                        mainViewModel.insert(reward);
+                    updateOrInsert(reward, exists);
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<UrlInfo> call, @NonNull Throwable t) {
-                    if(exists)
-                        mainViewModel.update(reward);
-                    else
-                        mainViewModel.insert(reward);
+                    updateOrInsert(reward, exists);
                 }
             });
+        }else{
+            updateOrInsert(reward, exists);
         }
     }
 
